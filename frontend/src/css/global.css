@@ -1,0 +1,25 @@
+button.active.custom {
+    background-color: #47d226 !important;
+    color: white !important;
+}
+
+div.creo.header {
+    margin-right: 20px !important;
+}
+
+div.custom.small.block {
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+div.custom.small.block.bold {
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+}
