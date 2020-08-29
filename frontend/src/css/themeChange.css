@@ -1,0 +1,8 @@
+@font-face {
+    font-family: CreoFont;
+    src: url(../fonts/Linotte-SemiBold.otf);
+  }
+
+body, div, p {
+    font-family: CreoFont !important;
+}

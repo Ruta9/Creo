@@ -1,23 +1,42 @@
 import React from 'react';
+const logo = require('../images/Creo_logo_100_300.png');
 
-const Header = () => {
-    return (
-        <div className="ui secondary menu creo header">
-            <div className="item">
-                <a href="https://www.google.com">
-                    <img className="ui small image" alt="Creo logo" src={require('../images/Creo_logo_100_300.png')}/>
+class Header extends React.Component {
+
+    state= {
+        currentUser: 'Ruta Jankauskaite'
+    }
+
+    componentDidMount(){
+        
+    }
+
+    render() {
+        return (
+        <div className="ui large menu green creo-header">
+            <div className="creo-logo">
+                <img className="ui small image" alt="Creo logo" src={logo}/>
+            </div>
+            <a className="active item">
+                My Projects
+            </a>
+            <a className="item">
+                My Tickets
+            </a>
+
+            <div className="right menu">
+                <div className="small item">
+                    {this.state.currentUser}
+                    <i className="user black large icon"></i>
+                </div>
+                <a className="item">
+                    Logout
                 </a>
             </div>
-            <div className="right menu">
-                <button className="ui item large button active custom">
-                    Log in
-                </button>
-                <button className="ui item large button">
-                    Register
-                </button>
-            </div>
         </div>
-    );
-};
+        );
+    };
+
+}
 
 export default Header;

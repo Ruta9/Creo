@@ -1,25 +1,25 @@
-button.active.custom {
-    background-color: #47d226 !important;
+div.creo-logo {
+    padding-left: 5px;
+    padding-right: 30px;
+    background-color: white !important;
+    padding-top: 5px;
+}
+
+div.creo-header {
+    padding-top: 8px;
+    padding-left: 15px !important;
+}
+
+div.ui.menu.creo-header.green, div.creo-header.green div.item, div.ui.menu.creo-header.green a.item {
+    background-color: #4ba833 !important;
     color: white !important;
 }
 
-div.creo.header {
-    margin-right: 20px !important;
+div.ui.menu.creo-header.green a.item:hover, div.ui.menu.creo-header.green a.active.item {
+    background-color: #51b937 !important;
+    color: white !important;   
 }
 
-div.custom.small.block {
-    height: 50px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-div.custom.small.block.bold {
-    height: 50px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
+div.creo-header i.user.icon {
+    margin-left: 7px !important;
 }

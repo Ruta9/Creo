@@ -7,7 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RegistrationService {
+public class UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -44,6 +44,11 @@ public class RegistrationService {
             );
             userRepository.save(user);
         }
+    }
+
+    public String getUserFullName (String email){
+        User user = userRepository.findByEmail(email);
+        return user.getFirstname() + ' ' + user.getLastname();
     }
 
     //Method to get User roles

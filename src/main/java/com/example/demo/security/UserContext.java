@@ -26,7 +26,11 @@ public class UserContext {
             } catch (ClassCastException ex) {
                 return (String)auth.getPrincipal();
             }
-        }
-
     }
+
+    public Boolean isAuthenticated() {
+        return SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
+    }
+
+}
 

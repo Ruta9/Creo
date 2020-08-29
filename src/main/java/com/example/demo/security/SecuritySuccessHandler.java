@@ -16,14 +16,14 @@ public class SecuritySuccessHandler implements AuthenticationSuccessHandler {
 
 
     @Autowired
-    private RegistrationService registrationService;
+    private UserService userService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
 
         DefaultOidcUser oidcuser = ((DefaultOidcUser)authentication.getPrincipal());
 
-        registrationService.register(
+        userService.register(
                 oidcuser.getGivenName(),
                 oidcuser.getFamilyName(),
                 oidcuser.getEmail()
