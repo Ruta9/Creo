@@ -6,14 +6,6 @@ div.custom-small-block {
     justify-content: center;
 }
 
-button.custom-active-green {
-    background-color: #4ba833 !important;
-    color: white !important;  
-}
-
-button.custom-active-green:hover {
-    background-color: #51b937 !important;
-}
 
 div.login-form-block {
     background-color: rgba(255, 255, 255, 0.95) !important;

@@ -1,0 +1,7 @@
+div.project-block div.column, div.notification-bell {
+    color: black;
+}
+
+div.project-block div.notification-bell i.bell {
+    color: rgb(255, 17, 0);
+}

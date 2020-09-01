@@ -25,8 +25,7 @@ public class UserService {
                     registrationForm.getFirstname(),
                     registrationForm.getLastname(),
                     encoder.encode(registrationForm.getPassword()),
-                    registrationForm.getEmail(),
-                    RegistrationType.FORM
+                    registrationForm.getEmail()
                     );
             userRepository.save(user);
         }
@@ -39,8 +38,7 @@ public class UserService {
                     firstname,
                     lastname,
                     null,
-                    email,
-                    RegistrationType.OAUTH
+                    email
             );
             userRepository.save(user);
         }

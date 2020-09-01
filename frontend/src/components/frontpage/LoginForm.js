@@ -1,48 +1,63 @@
 import React, {useState} from 'react';
 import Axios from 'axios';
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import OauthPopup from 'react-oauth-popup';
+
+import {Form, FormInput} from '../common/Form';
 
 const LoginForm = () => {
 
     const [redirect, setRedirect] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
 
-    const onSuccessfullGoogleAuthorization = (code, params) => {
-        console.log(code);
-        console.log(params);
+    const onSuccessfullAuthorization = () => {
+        setRedirect(true);
     }
 
-    const onPopupClose = () => {
-        console.log("popup closed");
-    }
+    const onFormSubmit = async (form) => {
+        const response = await Axios.post("/api/auth/login", form).catch(error => {
+            setRedirect(false);
+            if (error.response){
+                setErrorMessage(error.response.data.message);
+            }
+            else {
+                setErrorMessage("Internal server error");
+            }
+        });
+        if (response && response.status === 200){
+            onSuccessfullAuthorization();
+        }
+    };
 
-    const onFormSubmit = (e) => {
-        e.preventDefault();
-        Axios.post("/api/auth/login", {
-            email: 'rutule9@gmail.com',
-            password: "admin"
-        }).then (
-            (response) => {console.log(response)}
-        );
+    const loginError = () => {
+        if (errorMessage !== ''){
+            return (
+                <div className="tiny ui message error">
+                    {`Login failed: ${errorMessage}`}
+                </div>
+            );
+        };
+
+        return null;
     };
 
     return (
-
         <div className="login-form">
+
+            
+            {redirect ? <Redirect to='/projects'/> : null}
 
             <div className="custom-small-block bold">
                 Log in to Creo:
             </div>
 
-            <form className="ui form" onSubmit={(e) => onFormSubmit(e)}>
-                <div className="field">
-                    <input type="text" name="email" placeholder="Enter your email"/>
-                </div>
-                <div className="field">
-                    <input type="password" name="password" placeholder="Enter your password"/>
-                </div>
+            {loginError()}
+
+            <Form onSubmit={onFormSubmit} validate={() => {return {}}}>
+                <FormInput type="text" name="email" placeholder="Enter your email"/>
+                <FormInput type="password" name="password" placeholder="Enter your password"/>
                 <button className="custom-active-green ui fluid button" type="submit">Log in</button>
-            </form>
+            </Form>
 
             <div className="custom-small-block">
                 OR
@@ -50,8 +65,7 @@ const LoginForm = () => {
 
             <OauthPopup
                 url="/oauth2/authorization/google"
-                onCode={onSuccessfullGoogleAuthorization}
-                onClose={onPopupClose}>
+                onCode={onSuccessfullAuthorization}>
                 <button className="ui google fluid plus button">
                     <i className="google plus icon"></i>
                     Continue with Google
@@ -69,7 +83,6 @@ const LoginForm = () => {
             </Link>
 
         </div>
-
     );
 }
 

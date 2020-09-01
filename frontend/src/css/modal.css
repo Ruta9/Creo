@@ -1,0 +1,9 @@
+div.custom-modal {
+    display: flex !important;
+    justify-content: center;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    left:0px;
+    align-self:center
+  }

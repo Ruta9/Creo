@@ -1,6 +1,5 @@
 package com.example.demo.data;
 
-import com.example.demo.security.RegistrationType;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,10 +9,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -25,11 +26,17 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @NotBlank(message = "First name can not be empty")
     private final String firstname;
+
+    @NotBlank(message = "First name can not be empty")
     private final String lastname;
+
+    @Size(min=8, message="Password should be at least 8 characters long")
     private final String password;
+
+    @Pattern(regexp="^[A-Za-z0-9+_.-]+@(.+)$", message="Email is not valid")
     private final String email;
-    private final RegistrationType registrationtype;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

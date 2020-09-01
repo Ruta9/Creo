@@ -2,7 +2,6 @@ package com.example.demo;
 
 import com.example.demo.data.User;
 import com.example.demo.repositories.UserRepository;
-import com.example.demo.security.RegistrationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -23,7 +22,7 @@ public class CreoApplication {
 	@Bean
 	CommandLineRunner runner() {
 		return args -> {
-			userRepository.save(new User("Ruta", "Jankauskaite", new BCryptPasswordEncoder().encode("admin"), "rutule9@gmail.com", RegistrationType.FORM));
+			userRepository.save(new User("Ruta", "Jankauskaite", new BCryptPasswordEncoder().encode("admin"), "rutule9@gmail.com"));
 		};
 	}
 

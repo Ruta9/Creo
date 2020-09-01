@@ -39,6 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers( "/", "/login", "/api/auth/login", "/api/user/isAuthenticated", "/oauth2/authorization/google").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/users").permitAll()
                 .antMatchers("/static/**", "/Creo_favicon.ico", "/manifest.json").permitAll()
                 .anyRequest().authenticated()
                 .and()

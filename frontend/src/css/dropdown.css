@@ -1,0 +1,10 @@
+div.dropdown:focus, 
+div.dropdown.active, 
+div.dropdown:hover, 
+div.dropdown .menu:hover {
+    border-color: #4ba833 !important;
+}
+
+div.dropdown {
+    margin-left: 8px;
+}

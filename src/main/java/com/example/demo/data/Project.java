@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
 
@@ -20,12 +22,28 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private final UUID id;
 
+    @NotBlank(message="Project must have a name")
     private String name;
+
     private String description;
+
     private Date createdDate;
 
-    @ManyToOne
-    private User creator;
+    @ManyToOne(optional = false)
+    @JoinColumn(name="OWNER_ID", referencedColumnName="ID")
+    private User owner;
+
+    @ManyToMany
+    @JoinTable(
+            name="TEAM",
+            joinColumns = @JoinColumn(name="PROJECT_ID", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name="USER_ID", referencedColumnName = "ID")
+    )
+    private Collection<User> team;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "project")
+    private Collection<Story> stories;
+
 
     @PrePersist
     void createdDate(){

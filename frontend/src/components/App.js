@@ -5,6 +5,8 @@ import LoginForm from './frontpage/LoginForm';
 import RegisterForm from './frontpage/RegisterForm';
 import FrontPage from './frontpage/FrontPage';
 import PageNotFoundError from './errors/PageNotFoundError';
+import Header from './Header';
+import ProjectsList from './projects/ProjectsList';
 
 function App() {
 
@@ -13,6 +15,7 @@ function App() {
   return (
     <BrowserRouter>
        <div>
+         {isAuthenticated ? <Header/> : null}
         <Switch>
           <Route exact path="/">
             {isAuthenticated ? <Redirect to="/projects" /> : <Redirect to="/login" />}
@@ -26,6 +29,9 @@ function App() {
             <FrontPage>
                 <RegisterForm/>
             </FrontPage>
+          </Route>
+          <Route path="/projects">
+            <ProjectsList/>
           </Route>
           <Route>
             <PageNotFoundError/>

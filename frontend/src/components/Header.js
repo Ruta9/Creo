@@ -1,10 +1,15 @@
 import React from 'react';
-const logo = require('../images/Creo_logo_100_300.png');
+import {Link} from 'react-router-dom';
+
+import '../css/header.css';
+
+const logo = require('../images/Creo_logo_100_300_white_crop.png');
 
 class Header extends React.Component {
 
     state= {
         currentUser: 'Ruta Jankauskaite'
+        
     }
 
     componentDidMount(){
@@ -13,25 +18,25 @@ class Header extends React.Component {
 
     render() {
         return (
-        <div className="ui large menu green creo-header">
-            <div className="creo-logo">
-                <img className="ui small image" alt="Creo logo" src={logo}/>
+        <div className="ui small menu creo-header">
+            <div className="creo-logo item">
+                <img className="ui tiny image" alt="Creo logo" src={logo}/>
             </div>
-            <a className="active item">
+            <Link to="/projects" className="active green-item item">
                 My Projects
-            </a>
-            <a className="item">
+            </Link>
+            <Link to="/tickets" className="green-item item">
                 My Tickets
-            </a>
+            </Link>
 
             <div className="right menu">
                 <div className="small item">
                     {this.state.currentUser}
                     <i className="user black large icon"></i>
                 </div>
-                <a className="item">
+                <Link className="green-item item">
                     Logout
-                </a>
+                </Link>
             </div>
         </div>
         );

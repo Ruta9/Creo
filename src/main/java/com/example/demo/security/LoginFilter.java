@@ -10,6 +10,7 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.FilterChain;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -48,7 +49,11 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
                                               AuthenticationException failed)
     {
         SecurityContextHolder.clearContext();
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        try {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, failed.getMessage());
+        } catch (IOException e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
 
     }
 

@@ -1,16 +1,20 @@
 package com.example.demo.controllers;
 
-import com.example.demo.data.User;
+import com.example.demo.security.RegistrationForm;
+import com.example.demo.security.UserAlreadyExistsException;
 import com.example.demo.security.UserContext;
 import com.example.demo.security.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.AbstractMap;
+import java.util.Set;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
@@ -27,5 +31,15 @@ public class UserController {
     @GetMapping("/isAuthenticated")
     public Boolean isAuthenticated() {
         return userContext.isAuthenticated();
+    }
+
+    @PostMapping
+    public ResponseEntity<String> register(@Valid @RequestBody RegistrationForm registrationForm) {
+        try {
+            userService.register(registrationForm);
+        } catch (UserAlreadyExistsException e) {
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 }
