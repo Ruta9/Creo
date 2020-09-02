@@ -28,9 +28,5 @@ public class UserContext {
             }
     }
 
-    public Boolean isAuthenticated() {
-        return SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
-    }
-
 }
 

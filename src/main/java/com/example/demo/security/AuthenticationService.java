@@ -30,7 +30,7 @@ public class AuthenticationService {
 
     }
 
-    // Extracts the token form the cookie
+    // Extracts the token from the cookie
     static public Authentication getAuthentication(HttpServletRequest request) {
         if (request.getCookies() != null) {
             Cookie cookie = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("JWT")).findFirst().orElse(null);

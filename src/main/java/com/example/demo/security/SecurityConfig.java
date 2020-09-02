@@ -12,12 +12,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 
 @Configuration
@@ -38,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable().cors()
                 .and()
                 .authorizeRequests()
-                .antMatchers( "/", "/login", "/api/auth/login", "/api/user/isAuthenticated", "/oauth2/authorization/google").permitAll()
+                .antMatchers( "/", "/login", "/api/auth/login", "/api/users/isAuthenticated", "/oauth2/authorization/google").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/users").permitAll()
                 .antMatchers("/static/**", "/Creo_favicon.ico", "/manifest.json").permitAll()
                 .anyRequest().authenticated()
@@ -49,21 +51,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login()
                 .successHandler(securitySuccessHandler)
-                .loginPage("/login");
+                .loginPage("/login")
+                .and()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint());
+
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("*"));
-        config.setAllowedMethods(Arrays.asList("*"));
-        config.setAllowedHeaders(Arrays.asList("*"));
-        config.setAllowCredentials(true);
-        config.applyPermitDefaultValues();
-
-        source.registerCorsConfiguration("/**", config);
-        return source;
+    public AuthenticationEntryPoint unauthorizedEntryPoint() {
+        return (request, response, authenticationException) -> {
+            boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+            if (ajax) response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authenticationException.getMessage());
+            else response.sendRedirect("/login");
+        };
     }
 
     @Bean

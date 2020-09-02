@@ -2,18 +2,23 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 
 import '../css/header.css';
+import Axios from 'axios';
 
 const logo = require('../images/Creo_logo_100_300_white_crop.png');
 
 class Header extends React.Component {
 
     state= {
-        currentUser: 'Ruta Jankauskaite'
-        
+        currentUser: ''
     }
 
     componentDidMount(){
-        
+        Axios.get('/api/users/identity').then((response) => {
+            console.log(response);
+            this.setState({
+                currentUser: response.data
+            });
+        });
     }
 
     render() {

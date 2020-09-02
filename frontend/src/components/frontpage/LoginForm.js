@@ -1,22 +1,22 @@
 import React, {useState} from 'react';
 import Axios from 'axios';
-import {Link, Redirect} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import OauthPopup from 'react-oauth-popup';
+import {connect} from 'react-redux';
+import {signIn} from '../../actions';
 
 import {Form, FormInput} from '../common/Form';
 
-const LoginForm = () => {
+const LoginForm = (props) => {
 
-    const [redirect, setRedirect] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
 
     const onSuccessfullAuthorization = () => {
-        setRedirect(true);
+        props.signIn();
     }
 
     const onFormSubmit = async (form) => {
         const response = await Axios.post("/api/auth/login", form).catch(error => {
-            setRedirect(false);
             if (error.response){
                 setErrorMessage(error.response.data.message);
             }
@@ -28,6 +28,13 @@ const LoginForm = () => {
             onSuccessfullAuthorization();
         }
     };
+
+    const validate = (form) => {
+        const errors = {};
+        if (form.email === '' || !(/^[A-Za-z0-9+_.-]+@(.+)$/.test(form.email))) errors.email = "Enter valid email";
+        if (form.password === '') errors.password = "Enter password";
+        return errors;
+    }
 
     const loginError = () => {
         if (errorMessage !== ''){
@@ -44,16 +51,13 @@ const LoginForm = () => {
     return (
         <div className="login-form">
 
-            
-            {redirect ? <Redirect to='/projects'/> : null}
-
             <div className="custom-small-block bold">
                 Log in to Creo:
             </div>
 
             {loginError()}
 
-            <Form onSubmit={onFormSubmit} validate={() => {return {}}}>
+            <Form onSubmit={onFormSubmit} validate={validate}>
                 <FormInput type="text" name="email" placeholder="Enter your email"/>
                 <FormInput type="password" name="password" placeholder="Enter your password"/>
                 <button className="custom-active-green ui fluid button" type="submit">Log in</button>
@@ -86,4 +90,4 @@ const LoginForm = () => {
     );
 }
 
-export default LoginForm;
+export default connect(null, {signIn})(LoginForm);

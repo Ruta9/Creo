@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.AbstractMap;
 import java.util.Set;
 
@@ -29,8 +30,8 @@ public class UserController {
     }
 
     @GetMapping("/isAuthenticated")
-    public Boolean isAuthenticated() {
-        return userContext.isAuthenticated();
+    public Boolean isAuthenticated(Principal user) {
+        return user != null;
     }
 
     @PostMapping

@@ -52,7 +52,6 @@ class ProjectsList extends React.Component {
                 teamSize: 1,
                 newNotifications: 15,
                 activeStories: 1,
-                activeTasks: 3 ,
                 activeTasks: 12,
                 color: randomColor(),
                 picture: randomProjectPicture() },

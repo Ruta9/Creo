@@ -22,7 +22,6 @@ public class SecuritySuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
 
         DefaultOidcUser oidcuser = ((DefaultOidcUser)authentication.getPrincipal());
-
         userService.register(
                 oidcuser.getGivenName(),
                 oidcuser.getFamilyName(),

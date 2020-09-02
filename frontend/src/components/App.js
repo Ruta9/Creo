@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
+import {connect} from 'react-redux';
 
+import {checkIfAuthenticated} from '../actions';
 import LoginForm from './frontpage/LoginForm';
 import RegisterForm from './frontpage/RegisterForm';
 import FrontPage from './frontpage/FrontPage';
@@ -8,18 +10,16 @@ import PageNotFoundError from './errors/PageNotFoundError';
 import Header from './Header';
 import ProjectsList from './projects/ProjectsList';
 
-function App() {
-
-  const isAuthenticated = false;
+const App = (props) => {
   
-  return (
-    <BrowserRouter>
-       <div>
-         {isAuthenticated ? <Header/> : null}
+  useEffect(()=> {
+      props.checkIfAuthenticated();
+  }, []);
+
+  const renderRoutes = () => {
+    if (!props.isAuthenticated) {
+      return (
         <Switch>
-          <Route exact path="/">
-            {isAuthenticated ? <Redirect to="/projects" /> : <Redirect to="/login" />}
-          </Route>
           <Route path="/login" exact>
             <FrontPage>
                 <LoginForm/>
@@ -30,18 +30,44 @@ function App() {
                 <RegisterForm/>
             </FrontPage>
           </Route>
-          <Route path="/projects">
-            <ProjectsList/>
-          </Route>
           <Route>
-            <PageNotFoundError/>
+            <Redirect to="/login" />
           </Route>
         </Switch>
+      );
+    }
+    else {
+      return (
+        <div>
+          <Header/>
+          <Switch>
+            <Route exact path="/projects">
+              <ProjectsList/>
+            </Route>
+            <Route path={["/login", "/register", "/"]}>
+              <Redirect to="/projects"/>
+            </Route>
+            <Route>
+              <PageNotFoundError/>
+            </Route>
+          </Switch>
+        </div>
+      );
+    }
+  }
 
-
-       </div>
+  return (
+    <BrowserRouter>
+       {renderRoutes()}
     </BrowserRouter>
   );
+
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    isAuthenticated: state.isAuthenticated 
+  }
+}
+
+export default connect(mapStateToProps, {checkIfAuthenticated})(App);
