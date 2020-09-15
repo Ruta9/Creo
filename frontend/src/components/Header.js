@@ -14,7 +14,6 @@ class Header extends React.Component {
 
     componentDidMount(){
         Axios.get('/api/users/identity').then((response) => {
-            console.log(response);
             this.setState({
                 currentUser: response.data
             });
@@ -27,7 +26,7 @@ class Header extends React.Component {
             <div className="creo-logo item">
                 <img className="ui tiny image" alt="Creo logo" src={logo}/>
             </div>
-            <Link to="/projects" className="active green-item item">
+            <Link to="/projects" className="green-item item">
                 My Projects
             </Link>
             <Link to="/tickets" className="green-item item">
@@ -37,7 +36,8 @@ class Header extends React.Component {
             <div className="right menu">
                 <div className="small item">
                     {this.state.currentUser}
-                    <i className="user black large icon"></i>
+                    <img alt="avatar" className="ui avatar image" src="https://www.pngitem.com/pimgs/m/105-1055689_user-account-person-avatar-operating-system-grey-user.png"></img>
+                    {/* <i className="user black large icon"></i> */}
                 </div>
                 <Link className="green-item item">
                     Logout

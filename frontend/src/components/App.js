@@ -9,6 +9,9 @@ import FrontPage from './frontpage/FrontPage';
 import PageNotFoundError from './errors/PageNotFoundError';
 import Header from './Header';
 import ProjectsList from './projects/ProjectsList';
+import ProjectPage from './project/ProjectPage';
+import Loader from './common/Loader';
+import ProjectSecurity from './project/ProjectSecurity';
 
 const App = (props) => {
   
@@ -17,7 +20,14 @@ const App = (props) => {
   }, []);
 
   const renderRoutes = () => {
-    if (!props.isAuthenticated) {
+    if (props.isAuthenticated === null) {
+      return (
+        <Route>
+            <Loader/>
+        </Route>
+      );
+    }
+    else if (!props.isAuthenticated) {
       return (
         <Switch>
           <Route path="/login" exact>
@@ -30,6 +40,7 @@ const App = (props) => {
                 <RegisterForm/>
             </FrontPage>
           </Route>
+          <Route path="/oauth2" />
           <Route>
             <Redirect to="/login" />
           </Route>
@@ -38,11 +49,16 @@ const App = (props) => {
     }
     else {
       return (
-        <div>
+        <React.Fragment>
           <Header/>
           <Switch>
             <Route exact path="/projects">
               <ProjectsList/>
+            </Route>
+            <Route path="/project/:id">
+              <ProjectSecurity>
+                <ProjectPage/>
+              </ProjectSecurity>
             </Route>
             <Route path={["/login", "/register", "/"]}>
               <Redirect to="/projects"/>
@@ -51,7 +67,7 @@ const App = (props) => {
               <PageNotFoundError/>
             </Route>
           </Switch>
-        </div>
+        </React.Fragment>
       );
     }
   }

@@ -1,9 +1,6 @@
 package com.example.demo.data;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -20,7 +17,7 @@ public class Story {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private final UUID id;
+    private final Long id;
 
     @NotBlank
     private String name;
@@ -37,9 +34,12 @@ public class Story {
     @JoinColumn(name="ASSIGNEE_ID", referencedColumnName = "ID")
     private User assignee;
 
-    @NotBlank
-    private String status;
+    @OneToOne(optional=false)
+    @JoinColumn(name="STATUS_ID", referencedColumnName = "ID")
+    private Status status;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name="PROJECT_ID", referencedColumnName = "ID")
     private Project project;

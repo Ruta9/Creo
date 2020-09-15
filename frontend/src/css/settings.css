@@ -1,0 +1,11 @@
+div.settings-page{
+    margin-top: 15px !important;
+}
+
+div.general-settings {
+    overflow: auto;
+}
+
+input.file-input {
+    display: none;
+}

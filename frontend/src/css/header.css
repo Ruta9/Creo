@@ -1,10 +1,12 @@
 div.creo-header {
-    /* background-color: #4ba833 !important; */
     color: white !important;
-    /* background-image: linear-gradient( 135deg, #bbe93d 10%, #4ba833 100%) !important; */
     background-image: linear-gradient( 135deg, #454545 10%, #4ba833 100%) !important;
 }
 
 div.creo-header .item, div.creo-header i.user {
     color: white !important;
+}
+
+img.ui.avatar.image {
+    margin-left: 8px;
 }

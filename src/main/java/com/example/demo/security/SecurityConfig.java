@@ -38,9 +38,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .csrf().disable().cors()
+                .and().headers().frameOptions().sameOrigin()
                 .and()
                 .authorizeRequests()
-                .antMatchers( "/", "/login", "/api/auth/login", "/api/users/isAuthenticated", "/oauth2/authorization/google").permitAll()
+                .antMatchers( "/", "/login", "/error", "/api/auth/login", "/api/users/isAuthenticated", "/oauth2/authorization/google").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/users").permitAll()
                 .antMatchers("/static/**", "/Creo_favicon.ico", "/manifest.json").permitAll()
                 .anyRequest().authenticated()
@@ -60,9 +61,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationEntryPoint unauthorizedEntryPoint() {
         return (request, response, authenticationException) -> {
-            boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
-            if (ajax) response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authenticationException.getMessage());
-            else response.sendRedirect("/login");
+                boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+                if (ajax) response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authenticationException.getMessage());
+                else response.sendRedirect("/login");
         };
     }
 

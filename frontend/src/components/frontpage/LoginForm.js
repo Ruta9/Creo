@@ -26,6 +26,7 @@ const LoginForm = (props) => {
         });
         if (response && response.status === 200){
             onSuccessfullAuthorization();
+
         }
     };
 

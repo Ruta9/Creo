@@ -1,0 +1,30 @@
+div.role-grant {
+    margin-top: 20px;
+    margin-bottom: 80px;
+    margin-left: 15px;
+}
+
+div.role-grant div.is-global-selection{
+    margin-top: 10px !important;
+}
+
+div.role-grant div.team-list {
+    margin-top: 20px;
+    min-width: 300px;
+    max-width: 400px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+div.role-grant div.team-list div.item.user-select input {
+    width: 15px;
+    height: 15px;
+    margin-top: 7px;
+}
+
+div.role-grant div.team-list div.item.select-all input {
+    width: 15px;
+    height: 15px;
+    margin-left: 10px;
+}
+

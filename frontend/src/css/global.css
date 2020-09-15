@@ -7,3 +7,7 @@ button.custom-active-green:hover {
     background-color: #51b937 !important;
 }
 
+input:focus, textarea:focus{
+    border-color: #4ba833 !important;
+}
+

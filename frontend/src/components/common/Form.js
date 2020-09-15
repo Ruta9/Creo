@@ -7,11 +7,12 @@ export const FormInput = props => {
     const {getError} = useContext(FormContext);
     const {onInputBlur} = useContext(FormContext);
 
-    const [value, setValue] = useState('');
+    const [value, setValue] = useState(props.value);
 
     useEffect( () => {
+        if (value != undefined)
         handleInputChange(props.name, value);
-    }, [value, props.name, handleInputChange]);
+    }, [value]);
 
     const onChange = (e) => {
         setValue(e.target.value);
@@ -70,6 +71,7 @@ export class Form extends React.Component {
             form: stateForm,
             blurred: stateBlur
         })
+        console.log("comp did mount");
     }
 
     onInputBlur = (name) => {
@@ -116,7 +118,7 @@ export class Form extends React.Component {
                 handleInputChange: this.handleInputChange,
                 getError: this.getError,
                 onInputBlur: this.onInputBlur}}>
-                <form className={`ui form ${Object.getOwnPropertyNames(this.state.errors).length !== 0 ? 'error' : ''}`} onSubmit={(e) => this.handleSubmit(e)} >
+                <form className={`${this.props.size} ui form ${Object.getOwnPropertyNames(this.state.errors).length !== 0 ? 'error' : ''}`} onSubmit={(e) => this.handleSubmit(e)} >
                     {this.props.children}
                 </form>
             </FormContext.Provider>

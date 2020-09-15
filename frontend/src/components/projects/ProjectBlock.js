@@ -6,12 +6,12 @@ const ProjectBlock = ({project}) => {
 
     return (
         <div className="project-block">
-            <Link to="/project/1" className={`ui raised ${project.color} card`}>
+            <Link to={`/project/${project.id}/kanban`} className={`ui raised ${project.color} card`}>
                 <div className="content">
                     <div className="right floated">
-                        {project.newNotifications !== 0 ? 
+                        {project.unreadNotifications !== 0 ? 
                         <div className="notification-bell" data-tooltip="Notifications">
-                            <i className="bell large icon"></i> {project.newNotifications} 
+                            <i className="bell large icon"></i> {project.unreadNotifications} 
                         </div> : null}
                     </div>
                     <div className="header">

@@ -1,0 +1,30 @@
+div.status-config{
+    margin-top: 30px;
+    margin-bottom: 50px;
+    margin-left: 20px;
+}
+
+div.status-list {
+    min-width: 200px !important;
+}
+
+div.status-list div.item:hover{
+    box-shadow: 0 0 2px grey;
+}
+
+div.status-list div.item.selected {
+    box-shadow: 0 0 2px #51b937;
+    background-color: #51b937;
+}
+
+div.icon.buttons.plus-minus-buttons {
+    margin-top: 10px !important;
+}
+
+div.create-status input {
+    margin-top: 15px !important;
+}
+
+div.create-status div.field {
+    max-width: 300px;
+}

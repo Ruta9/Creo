@@ -4,16 +4,38 @@ import CreateProject from './CreateProject';
 import Dropdown from '../common/Dropdown';
 import '../../css/projectlist.css';
 import {randomColor, randomProjectPicture} from '../../utils/utils.js';
+import Axios from 'axios';
 
 class ProjectsList extends React.Component {
 
     orderOptions = [
         {value: 'name', label: 'Name'},
-        {value: 'newNotifications', label: 'Notifications'},
+        {value: 'unreadNotifications', label: 'Notifications'},
         {value: 'activeStories', label: 'Stories'},
         {value: 'activeTasks', label: 'Tasks'},
         {value: 'teamSize', label: 'Team'}
     ];
+
+    state = {
+        projects: [],
+        searchKeyword: '',
+        selectedOption: this.orderOptions[0],
+        showProjectCreateForm: false
+    };
+
+    componentDidMount = async () => {
+        const response = await Axios.get('/api/projects/userProjects');
+        if (response.status === 200){
+        const data = response.data;
+            data.forEach(d => {
+                d.picture = randomProjectPicture();
+                d.color = randomColor();
+            });
+            this.setState({
+                projects: response.data
+            });
+        }
+    };
 
     onOrderSelect = (selection) => {
         this.setState({
@@ -21,52 +43,14 @@ class ProjectsList extends React.Component {
         });
     }
 
-    state = {
-        projects: [
-            {   id:1,
-                name: "Personal",
-                teamSize: 7,
-                newNotifications: 5,
-                activeStories: 20,
-                activeTasks: 55,
-                color: randomColor(),
-                picture: randomProjectPicture() },
-            {   id:2,
-                name: "Traffi",
-                teamSize: 5,
-                newNotifications: 0,
-                activeStories: 2,
-                activeTasks: 8,
-                color: randomColor(),
-                picture: randomProjectPicture() },
-            {   id:3,
-                name: "Studies project",
-                teamSize: 2,
-                newNotifications: 1,
-                activeStories: 5,
-                activeTasks: 12,
-                color: randomColor(),
-                picture: randomProjectPicture() },
-            {   id:4,
-                name: "Home",
-                teamSize: 1,
-                newNotifications: 15,
-                activeStories: 1,
-                activeTasks: 12,
-                color: randomColor(),
-                picture: randomProjectPicture() },
-            {   id:5,
-                name: "Summer",
-                teamSize: 12,
-                newNotifications: 0,
-                activeStories: 6,
-                activeTasks: 18,
-                color: randomColor(),
-                picture: randomProjectPicture() }
-        ],
-        searchKeyword: '',
-        selectedOption: this.orderOptions[0]
-    };
+    onCreateFormClose = (created) => {
+        if (created) {
+            this.componentDidMount();
+        }
+        this.setState({
+            showProjectCreateForm: false
+        });
+    }
 
     onSearchFilterChange(e) {
        this.setState({
@@ -100,7 +84,6 @@ class ProjectsList extends React.Component {
 
         return (
             <div className="projects-list">
-                {/* <CreateProject/> */}
                 <div className="ui container">
                     <div className="ui stackable grid">
                         <div className="three column row">
@@ -113,6 +96,7 @@ class ProjectsList extends React.Component {
                             </div>
 
                             <div className="column">
+                            {this.state.showProjectCreateForm ? <CreateProject onClose={this.onCreateFormClose}/> : null}
                                 Order by: 
                                 <Dropdown
                                     options={this.orderOptions}
@@ -121,7 +105,7 @@ class ProjectsList extends React.Component {
                             </div>
 
                             <div className="middle aligned column">
-                               <button className="ui custom-active-green button">
+                               <button className="ui custom-active-green button" onClick={() => this.setState({showProjectCreateForm: true})}>
                                    Create new
                                </button>
                             </div>

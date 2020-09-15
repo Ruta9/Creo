@@ -1,26 +1,28 @@
 package com.example.demo.data;
 
-import com.sun.istack.NotNull;
-import lombok.AccessLevel;
+import com.example.demo.validation.StatusSizeConstraint;
+import com.example.demo.validation.StatusUniquenessConstraint;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Date;
-import java.util.UUID;
+import java.util.List;
 
 @Data
-@RequiredArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
+@NoArgsConstructor
 @Entity
 public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private final UUID id;
+    private Long id;
 
     @NotBlank(message="Project must have a name")
     private String name;
@@ -39,15 +41,36 @@ public class Project {
             joinColumns = @JoinColumn(name="PROJECT_ID", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(name="USER_ID", referencedColumnName = "ID")
     )
-    private Collection<User> team;
+    private List<User> team;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "project")
     private Collection<Story> stories;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", orphanRemoval = true)
+    @NotNull
+    @StatusUniquenessConstraint
+    @StatusSizeConstraint
+    private Collection<Status> statuses;
 
 
     @PrePersist
     void createdDate(){
         this.createdDate = new Date();
+    }
+
+    public void addStatuses(List<Status> statuses){
+        if (this.statuses != null) {
+            this.statuses.clear();
+            this.statuses.addAll(statuses);
+        }
+        else this.statuses = statuses;
+        statuses.forEach(s -> {
+            s.setProject(this);
+        });
     }
 
 

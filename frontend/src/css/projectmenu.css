@@ -1,0 +1,11 @@
+div.project-name.header {
+    margin-left: 20px;
+}
+
+div.project-menu {
+    margin-top: 20px;
+}
+
+div.project-menu.item{
+    min-width: 200px !important;
+}
