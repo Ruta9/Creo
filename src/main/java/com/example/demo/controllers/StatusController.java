@@ -1,8 +1,8 @@
 package com.example.demo.controllers;
 
-import com.example.demo.DTOs.ProjectCreateDTO;
 import com.example.demo.data.Status;
-import com.example.demo.services.ProjectService;
+import com.example.demo.exceptions.AccessForbiddenException;
+import com.example.demo.exceptions.ObjectNotFoundException;
 import com.example.demo.services.ProjectStatusesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.AbstractMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/statuses")
@@ -22,27 +21,25 @@ public class StatusController {
     ProjectStatusesService projectStatusesService;
 
     @GetMapping("/project/story/all/{id}")
-    public ResponseEntity<List<Status>> getStoryStatuses (@PathVariable Long id) {
+    public ResponseEntity<List<Status>> getStoryStatuses (@PathVariable Long id)
+            throws AccessForbiddenException, ObjectNotFoundException {
         List<Status> storyStatuses = projectStatusesService.getProjectStoriesStatusesSecured(id);
-        if (storyStatuses != null) return ResponseEntity.ok(storyStatuses);
-        else return new ResponseEntity(new AbstractMap.SimpleEntry<>("error","Project does not exist or you do not have access to see this information"), HttpStatus.NOT_FOUND);
+        return ResponseEntity.ok(storyStatuses);
     }
 
     @GetMapping("/project/task/all/{id}")
-    public ResponseEntity<List<Status>> getTaskStatuses (@PathVariable Long id) {
+    public ResponseEntity<List<Status>> getTaskStatuses (@PathVariable Long id)
+            throws AccessForbiddenException, ObjectNotFoundException {
         List<Status> taskStatuses = projectStatusesService.getProjectTasksStatusesSecured(id);
-        if (taskStatuses != null) return ResponseEntity.ok(taskStatuses);
-        else return new ResponseEntity(new AbstractMap.SimpleEntry<>("error","Project does not exist or you do not have access to see this information"), HttpStatus.NOT_FOUND);
+        return ResponseEntity.ok(taskStatuses);
 
     }
 
     @PutMapping("/project/{id}")
-    public ResponseEntity updateProjectStatuses (@PathVariable Long id, @Valid @RequestBody List<Status> statuses) {
-        String message = projectStatusesService.updateStatuses(id, statuses);
-        if (message == null) return new ResponseEntity(HttpStatus.OK);
-        else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+    public ResponseEntity updateProjectStatuses (@PathVariable Long id, @Valid @RequestBody List<Status> statuses)
+            throws AccessForbiddenException, ObjectNotFoundException {
+            projectStatusesService.updateStatusesSecured(id, statuses);
+            return ResponseEntity.ok().build();
     }
-
-
 
 }

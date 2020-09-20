@@ -1,5 +1,6 @@
 package com.example.demo.data;
 
+import com.example.demo.enums.ProjectDefaultImage;
 import com.example.demo.validation.StatusSizeConstraint;
 import com.example.demo.validation.StatusUniquenessConstraint;
 import lombok.Data;
@@ -10,7 +11,6 @@ import lombok.ToString;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +30,8 @@ public class Project {
     private String description;
 
     private Date createdDate;
+
+    private String imageUrl;
 
     @ManyToOne(optional = false)
     @JoinColumn(name="OWNER_ID", referencedColumnName="ID")
@@ -60,6 +62,14 @@ public class Project {
     @PrePersist
     void createdDate(){
         this.createdDate = new Date();
+        setImage();
+    }
+
+    @PreUpdate
+    void setImage() {
+        if (this.imageUrl == null) {
+            this.imageUrl = ProjectDefaultImage.getRandomImage().getUrl();
+        }
     }
 
     public void addStatuses(List<Status> statuses){

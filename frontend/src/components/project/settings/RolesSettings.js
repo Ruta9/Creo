@@ -41,6 +41,7 @@ const RoleGrant = ({data, onSubmitCallback}) => {
     }
 
     const renderTeamList = () => {
+
         const items = roleData.team.map(({teamMemberDTO, hasRole}) => {
             return (
             <div className="item user-select" key={teamMemberDTO.id}>
@@ -89,8 +90,8 @@ const RoleGrant = ({data, onSubmitCallback}) => {
                             <label>All</label>
                         </div>
                     </div>
-                    <div class="field">
-                        <div class="ui radio checkbox">
+                    <div className="field">
+                        <div className="ui radio checkbox">
                             <input type="radio" name={`isGlobal_${roleData.role}`} checked={!roleData.isGlobal} onChange={() => setIsGlobal(false)}/>
                             <label>Selected</label>
                         </div>

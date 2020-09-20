@@ -14,19 +14,3 @@ export const randomColor = () => {
 
     return colors[Math.floor(Math.random() * (colors.length))];
 }
-
-export const randomProjectPicture = () => {
-    const pictures = [
-        'apple',
-        'banana',
-        'chestnut',
-        'grapes',
-        'oranges',
-        'papaja',
-        'pears',
-        'pineapple',
-        'plumps'
-    ];
-
-    return pictures[Math.floor(Math.random() * (pictures.length))];
-}

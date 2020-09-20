@@ -1,6 +1,6 @@
 package com.example.demo.repositories;
 
-import com.example.demo.DTOs.UserRoleDTO;
+import com.example.demo.DTOs.roles.UserRole;
 import com.example.demo.data.Project;
 import com.example.demo.data.ProjectRole;
 import com.example.demo.enums.Role;
@@ -9,7 +9,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ProjectRoleRepository extends CrudRepository<ProjectRole, Long> {
 
@@ -21,7 +20,7 @@ public interface ProjectRoleRepository extends CrudRepository<ProjectRole, Long>
             "            ELSE FALSE END isGranted\n" +
             "            FROM PROJECT_ROLE r\n" +
             "           WHERE r.project_id = :project", nativeQuery = true)
-    List<UserRoleDTO> getUserRolesForProject(@Param("project") Long projectId, @Param("user") Long userId);
+    List<UserRole> getUserRolesForProject(@Param("project") Long projectId, @Param("user") Long userId);
 
     ProjectRole findByProjectAndRole(Project project, Role role);
 

@@ -1,6 +1,5 @@
 package com.example.demo.data;
 
-import com.example.demo.DTOs.TeamMemberDTO;
 import com.example.demo.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;

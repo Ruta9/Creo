@@ -1,50 +1,54 @@
 package com.example.demo.services;
 
-import com.example.demo.DTOs.UserProjectDTO;
+import com.example.demo.DTOs.UserProject;
 import com.example.demo.data.Project;
 import com.example.demo.data.ProjectRole;
+import com.example.demo.data.User;
 import com.example.demo.enums.Role;
 import com.example.demo.repositories.ProjectRepository;
 import com.example.demo.repositories.ProjectRoleRepository;
+import com.example.demo.repositories.UserRepository;
 import com.example.demo.security.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class SecurityService {
 
-    private ProjectRepository projectRepository;
-    private UserContext userContext;
-    private ProjectRoleRepository projectRoleRepository;
+    private final ProjectRoleRepository projectRoleRepository;
+    private final UserRepository userRepository;
+
+    private final UserContext userContext;
 
     @Autowired
-    public SecurityService (ProjectRepository projectRepository, UserContext userContext,
-                            ProjectRoleRepository projectRoleRepository) {
-        this.projectRepository = projectRepository;
+    public SecurityService (UserContext userContext,
+                            ProjectRoleRepository projectRoleRepository,
+                            UserRepository userRepository) {
         this.userContext = userContext;
         this.projectRoleRepository = projectRoleRepository;
+        this.userRepository = userRepository;
     }
 
-    public boolean userHasAccessToProject(Long id){
-        List<UserProjectDTO> userProjectDTOList = projectRepository.findProjectsByParticipation(userContext.getEmail());
-        Optional<UserProjectDTO> pr = userProjectDTOList.stream()
-                .filter(p -> p.getId().equals(id))
-                .findFirst();
-        return pr.isPresent();
+    public boolean userHasAccessToProject(Project project){
+        return project
+                .getTeam()
+                .stream()
+                .anyMatch(teamMember -> teamMember.getId().equals(getUser().getId()));
     }
 
-    public boolean userIsAnAdmin(Long id) {
-        Optional<Project> project = projectRepository.findById(id);
-        if (project.isEmpty()) return false;
+    public boolean userIsAnAdmin(Project project) {
+        ProjectRole pr = getProjectRole(project, Role.PROJECTADMIN);
+        if (pr == null) return false;
+        return pr.getUsers().stream().anyMatch(u -> u.getId().equals(getUser().getId()));
 
-        ProjectRole projectRole = projectRoleRepository.findByProjectAndRole(project.get(), Role.PROJECTADMIN);
-        if (projectRole == null) return false;
+    }
 
-        return projectRole.getUsers().stream().anyMatch(u -> u.getEmail().equals(userContext.getEmail()));
+    private User getUser(){
+        return userRepository.findByEmail(userContext.getEmail());
+    }
 
+    private ProjectRole getProjectRole (Project project, Role role){
+        return projectRoleRepository.findByProjectAndRole(project, role);
     }
 }

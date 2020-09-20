@@ -1,63 +1,65 @@
 package com.example.demo.services;
 
-import com.example.demo.DTOs.ProjectCreateDTO;
-import com.example.demo.DTOs.UserProjectDTO;
+import com.example.demo.DTOs.*;
 import com.example.demo.data.*;
+import com.example.demo.enums.DefaultTicketStatuses;
 import com.example.demo.enums.Role;
+import com.example.demo.exceptions.AccessForbiddenException;
+import com.example.demo.exceptions.ObjectNotFoundException;
 import com.example.demo.repositories.ProjectRepository;
 import com.example.demo.repositories.ProjectRoleRepository;
-import com.example.demo.repositories.UserRepository;
-import com.example.demo.security.UserContext;
+import com.example.demo.security.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
-    private final UserContext userContext;
-
-    private final SecurityService securityService;
-
     private final ProjectRoleRepository projectRoleRepository;
+
+    private final UserService userService;
+    private final SecurityService securityService;
 
     @Autowired
     public ProjectService (ProjectRepository projectRepository,
-                           UserContext userContext, UserRepository userRepository,
+                           UserService userService,
                            SecurityService securityService,
                            ProjectRoleRepository projectRoleRepository){
         this.projectRepository = projectRepository;
-        this.userContext = userContext;
-        this.userRepository = userRepository;
-        this.securityService = securityService;
         this.projectRoleRepository = projectRoleRepository;
 
+        this.securityService = securityService;
+        this.userService = userService;
+
     }
 
-    public List<UserProjectDTO> getUserProjects () {
-        return projectRepository.findProjectsByParticipation(userContext.getEmail());
+    public List<UserProject> getUserProjects () throws ObjectNotFoundException {
+        return projectRepository.findProjectsByParticipation(userService.getUser().getEmail());
     }
 
-    public Project createProject (ProjectCreateDTO pr) {
+    public void createProject (ProjectCreateForm pr) throws ObjectNotFoundException {
 
-        User user = userRepository.findByEmail(userContext.getEmail());
-        List<Status> statuses = DefaultStatuses.getAllDefaultStatuses();
+        User user = userService.getUser();
+        List<Status> statuses = DefaultTicketStatuses.getAllDefaultStatuses();
 
         // Create project
         Project project = new Project();
         project.setName(pr.getName());
         project.setDescription(pr.getDescription());
         project.setOwner(user);
+        project.setTeam(Arrays.asList(user));
+
         for (Status s: statuses){
             s.setProject(project);
         }
         project.setStatuses(statuses);
-        project.setTeam(Arrays.asList(user));
+
         project = projectRepository.save(project);
 
         //Assign roles to the owner
@@ -69,15 +71,62 @@ public class ProjectService {
             projectRole.setRole(r);
             projectRoleRepository.save(projectRole);
         }
-        return project;
     }
 
-    public String getProjectNameSecured(Long id){
-        if (securityService.userHasAccessToProject(id)) {
-            Optional<Project> project = projectRepository.findById(id);
-            if (project.isPresent()) return project.get().getName();
+    public String getProjectNameSecured(Long id)
+            throws ObjectNotFoundException, AccessForbiddenException {
+
+        Project project = getProject(id);
+
+        if (securityService.userHasAccessToProject(project)) {
+            return project.getName();
         }
-        return null;
+        else throw new AccessForbiddenException();
+    }
+
+    public ProjectGeneralInformation getProjectGeneralInfoSecured(Long id)
+            throws ObjectNotFoundException, AccessForbiddenException {
+
+        Project project = getProject(id);
+
+        if (securityService.userHasAccessToProject(project)) {
+                TeamMember owner = new TeamMember(
+                        project.getOwner().getId(),
+                        project.getOwner().getFirstname(),
+                        project.getOwner().getLastname(),
+                        project.getOwner().getEmail()
+                );
+                return new ProjectGeneralInformation(
+                        project.getId(),
+                        project.getName(),
+                        project.getDescription(),
+                        owner,
+                        project.getImageUrl()
+                );
+        }
+        else throw new AccessForbiddenException();
+    }
+
+    public List<TeamMember> getProjectTeamSecured(Long id)
+            throws ObjectNotFoundException, AccessForbiddenException {
+        Project project = getProject(id);
+
+        if (securityService.userHasAccessToProject(project)) {
+            return project.getTeam().stream()
+                    .map(user -> new TeamMember(user.getId(), user.getFirstname(), user.getLastname(), user.getEmail()))
+                    .collect(Collectors.toList());
+        }
+        else throw new AccessForbiddenException();
+    }
+
+    public Project getProject (Long id) throws ObjectNotFoundException {
+        Optional<Project> project = projectRepository.findById(id);
+        if (project.isPresent()) return project.get();
+        else throw new ObjectNotFoundException("No project found with id: " + id);
+    }
+
+    public void saveProject(Project project){
+        projectRepository.save(project);
     }
 
 }

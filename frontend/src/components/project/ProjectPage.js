@@ -12,9 +12,9 @@ const ProjectPage = () => {
 
     useEffect(() => {
         (async () => {
-            const results = await Axios.get(`/api/roles/project/${id}/current`);
+            const results = await Axios.get(`/api/security/projects/adminRole/${id}`);
             if (results.status === 200){
-                setIsAdmin(results.data.find(r => r.role === "PROJECTADMIN").isGranted);
+                setIsAdmin(results.data);
             }
             else setIsAdmin(false);
         })();

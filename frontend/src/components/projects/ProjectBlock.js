@@ -20,7 +20,7 @@ const ProjectBlock = ({project}) => {
                 </div>
 
                 <div className="center aligned content">
-                    <img alt="project" className="ui small image" src={require(`../../images/projectIcons/${project.picture}.png`)}/>
+                    <img alt="project" className="ui small image" src={project.imageUrl}/>
                 </div>
 
                 <div className="content">

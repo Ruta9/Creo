@@ -5,7 +5,7 @@ import lombok.Value;
 import javax.validation.constraints.NotBlank;
 
 @Value
-public class ProjectCreateDTO {
+public class ProjectCreateForm {
 
     @NotBlank
     String name;

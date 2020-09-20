@@ -22,10 +22,12 @@ const StatusesConfiguration = (props) => {
     }, []);
 
     useEffect(()=> {
-        props.onSaveClick(() => {
-            reorder();
-            return statuses;
-        }, props.ticketType);
+        if (statuses !== []) {
+            props.onSaveClick(() => {
+                reorder();
+                return statuses;
+            }, props.ticketType);
+        }
     }, [statuses])
 
     const getStatuses = async () => {
@@ -160,7 +162,7 @@ const StatusesConfiguration = (props) => {
                 </div>
             </div>
             {renderForm()}
-            <div class="ui icon tiny buttons plus-minus-buttons">
+            <div className="ui icon tiny buttons plus-minus-buttons">
                 <div className="ui button" onClick={removeItemClick}>
                     <i className="minus icon"/>
                 </div>
@@ -205,6 +207,7 @@ const StatusSettings = () => {
     }
 
     return (
+
         <React.Fragment>
             <div className="ui olive message">
                 <div className="ui centered grid">

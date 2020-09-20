@@ -21,17 +21,17 @@ INSERT INTO USER (id, firstname, lastname, password, email) VALUES
     (20, 'Theresa', 'Ross', '$2a$10$KFqFtSfHTzWnIaIi5cRPRerrpufLQzvhkei2onU8cNbbUvG3mN39q', 'theresa.ross@gmail.com');
 
 
-INSERT INTO PROJECT (id, name, description, created_date, owner_id) VALUES
-    (1, 'Personal', 'Personal project for everyday needs', TO_DATE('2020-05-20', 'YYYY-MM-DD'), 1),
-    (2, 'Twitter', '-', TO_DATE('2011-04-01', 'YYYY-MM-DD'), 1),
-    (3, 'Traffi', '-', TO_DATE('2018-11-15', 'YYYY-MM-DD'), 2),
-    (4, 'Harvard', 'Dream big', TO_DATE('2019-09-01', 'YYYY-MM-DD'), 3),
-    (5, 'Uni Project', 'For Object oriented programming course', TO_DATE('2017-09-21', 'YYYY-MM-DD'), 4),
-    (6, 'NASA', '', TO_DATE('1997-10-15', 'YYYY-MM-DD'), 5),
-    (7, 'Vacation', 'TODO for our upcoming vacation', TO_DATE('2020-01-01', 'YYYY-MM-DD'), 2),
-    (8, 'English language lessons', '', TO_DATE('2016-05-04', 'YYYY-MM-DD'), 4),
-    (9, 'GameJam', 'Team A', TO_DATE('2018-01-20', 'YYYY-MM-DD'), 1),
-    (10, 'Creo', 'Creo product', TO_DATE('2020-08-20', 'YYYY-MM-DD'), 1);
+INSERT INTO PROJECT (id, name, description, image_url, created_date, owner_id) VALUES
+    (1, 'Personal', 'Personal project for everyday needs', 'projectimgs/papaja.png',TO_DATE('2020-05-20', 'YYYY-MM-DD'), 1),
+    (2, 'Twitter', '-', 'projectimgs/plumps.png', TO_DATE('2011-04-01', 'YYYY-MM-DD'), 1),
+    (3, 'Traffi', '-', 'projectimgs/apple.png', TO_DATE('2018-11-15', 'YYYY-MM-DD'), 2),
+    (4, 'Harvard', 'Dream big', 'projectimgs/banana.png', TO_DATE('2019-09-01', 'YYYY-MM-DD'), 3),
+    (5, 'Uni Project', 'For Object oriented programming course', 'projectimgs/pears.png', TO_DATE('2017-09-21', 'YYYY-MM-DD'), 4),
+    (6, 'NASA', '', 'projectimgs/chestnut.png', TO_DATE('1997-10-15', 'YYYY-MM-DD'), 5),
+    (7, 'Vacation', 'TODO for our upcoming vacation', 'projectimgs/oranges.png', TO_DATE('2020-01-01', 'YYYY-MM-DD'), 2),
+    (8, 'English language lessons', '', 'projectimgs/pineapple.png', TO_DATE('2016-05-04', 'YYYY-MM-DD'), 4),
+    (9, 'GameJam', 'Team A', 'projectimgs/grapes.png', TO_DATE('2018-01-20', 'YYYY-MM-DD'), 1),
+    (10, 'Creo', 'Creo product', 'projectimgs/papaja.png', TO_DATE('2020-08-20', 'YYYY-MM-DD'), 1);
 
 INSERT INTO TEAM (project_id, user_id) values
 (1, 1),

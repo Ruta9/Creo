@@ -1,6 +1,5 @@
 package com.example.demo.repositories;
 
-import com.example.demo.DTOs.UserProjectDTO;
 import com.example.demo.data.Status;
 import com.example.demo.enums.TicketType;
 import org.springframework.data.jpa.repository.Query;

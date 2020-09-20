@@ -1,11 +1,10 @@
 package com.example.demo.DTOs;
 
-import java.util.UUID;
-
-public interface UserProjectDTO {
+public interface UserProject {
 
     Long getId();
     String getName();
+    String getImageUrl();
     int getTeamSize();
     int getUnreadNotifications();
     int getActiveStories();

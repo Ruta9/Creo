@@ -1,7 +1,10 @@
 package com.example.demo.services;
 
+import com.example.demo.data.Project;
 import com.example.demo.data.Status;
 import com.example.demo.enums.TicketType;
+import com.example.demo.exceptions.AccessForbiddenException;
+import com.example.demo.exceptions.ObjectNotFoundException;
 import com.example.demo.repositories.ProjectRepository;
 import com.example.demo.repositories.StatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,45 +15,52 @@ import java.util.List;
 @Service
 public class ProjectStatusesService {
 
-    private final ProjectRepository projectRepository;
     private final StatusRepository statusRepository;
 
     private final SecurityService securityService;
+    private final ProjectService projectService;
 
     @Autowired
-    public ProjectStatusesService (ProjectRepository projectRepository,
-                           SecurityService securityService,
-                           StatusRepository statusRepository){
-        this.projectRepository = projectRepository;
+    public ProjectStatusesService (SecurityService securityService,
+                           StatusRepository statusRepository,
+                           ProjectService projectService){
         this.securityService = securityService;
         this.statusRepository = statusRepository;
+        this.projectService = projectService;
 
     }
 
-    public List<Status> getProjectStoriesStatusesSecured(Long id){
-        if (securityService.userHasAccessToProject(id)) {
+    public List<Status> getProjectStoriesStatusesSecured(Long id)
+            throws ObjectNotFoundException, AccessForbiddenException {
+        Project project = projectService.getProject(id);
+        if (securityService.userHasAccessToProject(project)) {
             return getStatuses(id, TicketType.STORY);
         }
-        else return null;
+        else throw new AccessForbiddenException();
     }
 
-    public List<Status> getProjectTasksStatusesSecured(Long id){
-        if (securityService.userHasAccessToProject(id)) {
+    public List<Status> getProjectTasksStatusesSecured(Long id)
+            throws ObjectNotFoundException, AccessForbiddenException {
+        Project project = projectService.getProject(id);
+        if (securityService.userHasAccessToProject(project)) {
             return getStatuses(id, TicketType.TASK);
         }
-        else return null;
+        else throw new AccessForbiddenException();
     }
 
-    private List<Status> getStatuses(Long id, TicketType ticketType){
-        return statusRepository.findStatusesByTicketTypeAndProject(ticketType, id);
+    private List<Status> getStatuses(Long id, TicketType ticketType) throws ObjectNotFoundException {
+        List<Status> statuses = statusRepository.findStatusesByTicketTypeAndProject(ticketType, id);
+        if (statuses.isEmpty()) throw new ObjectNotFoundException("No statuses were found for ticket type " + ticketType + " in project with id " + id);
+        else return statuses;
     }
 
-    public String updateStatuses(Long id, List<Status> statuses){
-        if (!securityService.userIsAnAdmin(id)) return "You do not have the rights to update this object";
-        projectRepository.findById(id).ifPresent(p -> {
-            p.addStatuses(statuses);
-            projectRepository.save(p);
-        });
-        return null;
+    public void updateStatusesSecured(Long id, List<Status> statuses)
+            throws ObjectNotFoundException, AccessForbiddenException {
+        Project project = projectService.getProject(id);
+        if (securityService.userIsAnAdmin(project)){
+                project.addStatuses(statuses);
+                projectService.saveProject(project);
+        }
+        else throw new AccessForbiddenException();
     }
 }

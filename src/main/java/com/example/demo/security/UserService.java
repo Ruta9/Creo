@@ -1,19 +1,29 @@
 package com.example.demo.security;
 
 import com.example.demo.data.User;
+import com.example.demo.exceptions.ObjectNotFoundException;
 import com.example.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     private BCryptPasswordEncoder encoder;
+
+    private final UserContext userContext;
+
+    @Autowired
+    public UserService (UserRepository userRepository, UserContext userContext){
+        this.userRepository = userRepository;
+        this.userContext = userContext;
+    }
 
     public void register (RegistrationForm registrationForm) throws UserAlreadyExistsException {
         User user = userRepository.findByEmail(registrationForm.getEmail());
@@ -44,11 +54,17 @@ public class UserService {
         }
     }
 
-    public String getUserFullName (String email){
-        User user = userRepository.findByEmail(email);
-        return user.getFirstname() + ' ' + user.getLastname();
+    public User getUser() throws ObjectNotFoundException {
+        User user = userRepository.findByEmail(userContext.getEmail());
+        if (user != null) return user;
+        else throw new ObjectNotFoundException("Something went wrong while trying to fetch currently logged in user");
     }
 
-    //Method to get User roles
+    public User getUser(Long id) throws ObjectNotFoundException {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) throw new ObjectNotFoundException("Something went wrong while trying to fetch currently logged in user");
+        else return user.get();
+    }
+
 
 }

@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Value
-public class TeamRoleDTO {
+public class ProjectRoleDTO {
 
     @NotNull
     Long id;
@@ -20,7 +20,7 @@ public class TeamRoleDTO {
     @NotNull
     Boolean isGlobal;
 
-    List<RoleGrantDTO> team;
+    List<ProjectRoleGrant> team;
 
 
 }

@@ -3,7 +3,7 @@ import ProjectBlock from './ProjectBlock';
 import CreateProject from './CreateProject';
 import Dropdown from '../common/Dropdown';
 import '../../css/projectlist.css';
-import {randomColor, randomProjectPicture} from '../../utils/utils.js';
+import {randomColor} from '../../utils/utils.js';
 import Axios from 'axios';
 
 class ProjectsList extends React.Component {
@@ -28,7 +28,6 @@ class ProjectsList extends React.Component {
         if (response.status === 200){
         const data = response.data;
             data.forEach(d => {
-                d.picture = randomProjectPicture();
                 d.color = randomColor();
             });
             this.setState({

@@ -1,10 +1,16 @@
 div.dropdown:focus, 
 div.dropdown.active, 
 div.dropdown:hover, 
-div.dropdown .menu:hover {
+div.dropdown .menu:hover,
+div.dropdown:active  {
     border-color: #4ba833 !important;
 }
 
 div.dropdown {
     margin-left: 8px;
+}
+
+div.dropdown.small {
+    max-height: 300px;
+    overflow-y: auto;
 }

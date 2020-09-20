@@ -1,9 +1,10 @@
 package com.example.demo.controllers;
 
-import com.example.demo.DTOs.ProjectCreateDTO;
-import com.example.demo.DTOs.roles.TeamRoleDTO;
-import com.example.demo.DTOs.UserRoleDTO;
+import com.example.demo.DTOs.roles.ProjectRoleDTO;
+import com.example.demo.DTOs.roles.UserRole;
 import com.example.demo.enums.Role;
+import com.example.demo.exceptions.AccessForbiddenException;
+import com.example.demo.exceptions.ObjectNotFoundException;
 import com.example.demo.services.ProjectRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,23 +23,21 @@ public class RolesController {
     ProjectRolesService projectRolesService;
 
     @GetMapping("/project/{id}/current")
-    public ResponseEntity<List<UserRoleDTO>> getCurrentUserRoles (@PathVariable Long id) {
-        List<UserRoleDTO> userRoles = projectRolesService.getUserRolesForProject(id);
-        if (userRoles == null) return new ResponseEntity(new AbstractMap.SimpleEntry<>("error","Project does not exist or the user does not have the required access rights to see it"), HttpStatus.NOT_FOUND);
-        else return ResponseEntity.ok(userRoles);
+    public ResponseEntity<List<UserRole>> getCurrentUserRoles (@PathVariable Long id)
+            throws AccessForbiddenException, ObjectNotFoundException {
+            return ResponseEntity.ok(projectRolesService.getUserRolesForProjectSecured(id));
     }
 
     @GetMapping("/project/{id}/team")
-    public ResponseEntity<List<TeamRoleDTO>> getTeamRoles (@PathVariable Long id) {
-        List<TeamRoleDTO> teamRoles = projectRolesService.getTeamRolesForProject(id);
-        if (teamRoles == null) return new ResponseEntity(new AbstractMap.SimpleEntry<>("error","Project does not exist or the user does not have the required access rights to see it"), HttpStatus.NOT_FOUND);
-        else return ResponseEntity.ok(teamRoles);
+    public ResponseEntity<List<ProjectRoleDTO>> getTeamRoles (@PathVariable Long id)
+            throws AccessForbiddenException, ObjectNotFoundException {
+        return ResponseEntity.ok(projectRolesService.getTeamRolesForProjectSecured(id, false));
     }
 
     @PutMapping("/project/{id}/team/{role}")
-    public ResponseEntity<String> updateProjectRoleForUsers (@PathVariable Long id, @PathVariable Role role, @Valid @RequestBody TeamRoleDTO teamRoleDTO) {
-        String message = projectRolesService.updateProjectRole(id, role, teamRoleDTO);
-        if (message == null) return new ResponseEntity(HttpStatus.OK);
-        else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+    public ResponseEntity updateProjectRoleForUsers (@PathVariable Long id, @PathVariable Role role, @Valid @RequestBody ProjectRoleDTO projectRoleDTO)
+            throws AccessForbiddenException, ObjectNotFoundException {
+        projectRolesService.updateProjectRoleSecured(id, role, projectRoleDTO);
+        return ResponseEntity.ok().build();
     }
 }

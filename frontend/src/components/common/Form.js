@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 
 const FormContext = React.createContext();
 
-export const FormInput = props => {
+export const FormInput = React.forwardRef((props, ref) => {
     const {handleInputChange} = useContext(FormContext);
     const {getError} = useContext(FormContext);
     const {onInputBlur} = useContext(FormContext);
@@ -10,12 +10,17 @@ export const FormInput = props => {
     const [value, setValue] = useState(props.value);
 
     useEffect( () => {
-        if (value != undefined)
+        if (value !== undefined)
         handleInputChange(props.name, value);
     }, [value]);
 
+    useEffect( () => {
+        setValue(props.value);
+    }, [props.value])
+
     const onChange = (e) => {
         setValue(e.target.value);
+        if (props.changeCallback) props.changeCallback(e);
     }
 
     const errorElement = (
@@ -28,6 +33,7 @@ export const FormInput = props => {
         return (
             <div className={`field ${getError(props.name) !== null ? 'error' : ''}`}>
                 <textarea 
+                ref={ref}
                 onChange={onChange}
                 onBlur={() => onInputBlur(props.name)} {...props}
                 value={value} />
@@ -39,6 +45,7 @@ export const FormInput = props => {
     return (
         <div className={`field ${getError(props.name) !== null ? 'error' : ''}`}>
             <input 
+            ref={ref}
             onChange={onChange}
             onBlur={() => onInputBlur(props.name)} {...props}
             value={value} />
@@ -46,7 +53,7 @@ export const FormInput = props => {
         </div>
     );
 
-}
+});
 
 export class Form extends React.Component {
 
@@ -71,7 +78,7 @@ export class Form extends React.Component {
             form: stateForm,
             blurred: stateBlur
         })
-        console.log("comp did mount");
+
     }
 
     onInputBlur = (name) => {

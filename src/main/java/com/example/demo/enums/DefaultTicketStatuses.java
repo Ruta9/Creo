@@ -1,11 +1,12 @@
-package com.example.demo.data;
+package com.example.demo.enums;
 
+import com.example.demo.data.Status;
 import com.example.demo.enums.TicketType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultStatuses {
+public class DefaultTicketStatuses {
 
     public static List<Status> getDefaultStatuses(TicketType ticketType) {
         List<Status> statuses = new ArrayList();
@@ -19,8 +20,10 @@ public class DefaultStatuses {
     }
 
     public static List<Status> getAllDefaultStatuses(){
-        List<Status> statuses = getDefaultStatuses(TicketType.STORY);
-        statuses.addAll(getDefaultStatuses(TicketType.TASK));
+        List<Status> statuses = new ArrayList<>();
+        for (TicketType t : TicketType.values()){
+            statuses.addAll(getDefaultStatuses(t));
+        }
         return statuses;
     }
 }

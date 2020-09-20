@@ -3,7 +3,7 @@ package com.example.demo.DTOs;
 import lombok.Value;
 
 @Value
-public class TeamMemberDTO {
+public class TeamMember {
 
     Long id;
     String firstname;

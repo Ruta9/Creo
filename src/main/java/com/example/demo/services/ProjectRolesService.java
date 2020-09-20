@@ -1,17 +1,17 @@
 package com.example.demo.services;
 
-import com.example.demo.DTOs.roles.RoleGrantDTO;
-import com.example.demo.DTOs.TeamMemberDTO;
-import com.example.demo.DTOs.roles.TeamRoleDTO;
-import com.example.demo.DTOs.UserRoleDTO;
+import com.example.demo.DTOs.roles.ProjectRoleGrant;
+import com.example.demo.DTOs.TeamMember;
+import com.example.demo.DTOs.roles.ProjectRoleDTO;
+import com.example.demo.DTOs.roles.UserRole;
 import com.example.demo.data.Project;
 import com.example.demo.data.ProjectRole;
 import com.example.demo.data.User;
 import com.example.demo.enums.Role;
-import com.example.demo.repositories.ProjectRepository;
+import com.example.demo.exceptions.AccessForbiddenException;
+import com.example.demo.exceptions.ObjectNotFoundException;
 import com.example.demo.repositories.ProjectRoleRepository;
-import com.example.demo.repositories.UserRepository;
-import com.example.demo.security.UserContext;
+import com.example.demo.security.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -20,88 +20,102 @@ import java.util.stream.Collectors;
 @Service
 public class ProjectRolesService {
 
-    private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
     private final ProjectRoleRepository projectRoleRepository;
 
+    private final ProjectService projectService;
+    private final UserService userService;
+
     private final SecurityService securityService;
-    private final UserContext userContext;
 
 
-    public ProjectRolesService (ProjectRepository projectRepository,
-                                UserContext userContext,
-                                UserRepository userRepository,
-                                ProjectRoleRepository projectRoleRepository,
-                                SecurityService securityService){
-        this.projectRepository = projectRepository;
-        this.userContext = userContext;
-        this.userRepository = userRepository;
+    public ProjectRolesService (ProjectRoleRepository projectRoleRepository,
+                                SecurityService securityService,
+                                ProjectService projectService,
+                                UserService userService){
         this.projectRoleRepository = projectRoleRepository;
         this.securityService = securityService;
-
+        this.projectService = projectService;
+        this.userService = userService;
     }
 
-    public List<UserRoleDTO> getUserRolesForProject(Long id){
-        if (!securityService.userHasAccessToProject(id)) return null;
-        User user = userRepository.findByEmail(userContext.getEmail());
-        return projectRoleRepository.getUserRolesForProject(id, user.getId());
+    public List<UserRole> getUserRolesForProjectSecured(Long id)
+            throws ObjectNotFoundException, AccessForbiddenException {
+
+        Project project = projectService.getProject(id);
+        if (securityService.userHasAccessToProject(project)) {
+            User user = userService.getUser();
+            return projectRoleRepository.getUserRolesForProject(id, user.getId());
+        }
+        else throw new AccessForbiddenException();
     }
 
-    public List<TeamRoleDTO> getTeamRolesForProject(Long id){
-        if (!securityService.userHasAccessToProject(id)) return null;
-        List<TeamRoleDTO> projectTeamRoles = new ArrayList<>();
-        Optional<Project> pr = projectRepository.findById(id);
-        User user = userRepository.findByEmail(userContext.getEmail());
+    public List<ProjectRoleDTO> getTeamRolesForProjectSecured(Long id, boolean includeOwner)
+            throws ObjectNotFoundException, AccessForbiddenException {
 
-        if (pr.isPresent()){
+        Project project = projectService.getProject(id);
+        if (securityService.userHasAccessToProject(project)) {
 
-            Project project = pr.get();
+            List<ProjectRoleDTO> projectTeamRoles = new ArrayList<>();
 
-            //Team roles can only be seen by the admin. Admin should not be able to see himself
+            List<User> projectTeam = project.getTeam().stream()
+                    .filter((t -> includeOwner || !t.getId().equals(project.getOwner().getId())) )
+                    .collect(Collectors.toList());
 
-            List<User> projectTeam = project.getTeam().stream().filter(t -> t.getId() != user.getId()).collect(Collectors.toList());
+            for (Role r : Role.values()) {
 
-            for (Role r : Role.values()){
-                ProjectRole projectRole = projectRoleRepository.findByProjectAndRole(project, r);
-                List<RoleGrantDTO> roleGrantDTOS = new ArrayList<>();
+                ProjectRole projectRole = getProjectRole(project, r);
+                if (projectRole == null) throw new ObjectNotFoundException("Project Role object was not found in the database");
 
-                for (User teamMember: projectTeam){
+                List<ProjectRoleGrant> projectRoleGrants = new ArrayList<>();
+
+                for (User teamMember : projectTeam) {
                     Boolean hasRole = false;
                     if (projectRole.isGlobal()) hasRole = true;
-                    else if (projectRole.getUsers().stream().anyMatch(u -> u.getId() == teamMember.getId())) hasRole = true;
-                    roleGrantDTOS.add(new RoleGrantDTO(new TeamMemberDTO(teamMember.getId(), teamMember.getFirstname(), teamMember.getLastname(), teamMember.getEmail()), hasRole));
+                    else if (projectRole.getUsers().stream().anyMatch(u -> u.getId().equals(teamMember.getId())))
+                        hasRole = true;
+                    projectRoleGrants.add(new ProjectRoleGrant(new TeamMember(teamMember.getId(), teamMember.getFirstname(), teamMember.getLastname(), teamMember.getEmail()), hasRole));
                 }
 
-                projectTeamRoles.add(new TeamRoleDTO(projectRole.getId(), r, r.getDescription(), projectRole.isGlobal(), roleGrantDTOS));
+                projectTeamRoles.add(new ProjectRoleDTO(projectRole.getId(), r, r.getDescription(), projectRole.isGlobal(), projectRoleGrants));
+
             }
+            return projectTeamRoles;
         }
-        else {
-            projectTeamRoles = null;
-        }
-        return projectTeamRoles;
+        else throw new AccessForbiddenException();
+
     }
 
+    public void updateProjectRoleSecured(Long project_id, Role role, ProjectRoleDTO teamRoleDTO)
+            throws ObjectNotFoundException, AccessForbiddenException {
 
-    public String updateProjectRole (Long project_id, Role role, TeamRoleDTO teamRoleDTO){
+        Project project = projectService.getProject(project_id);
 
-        if (!securityService.userIsAnAdmin(project_id)) return "You do not have the rights to update this object";
-
-        Optional<Project> project = projectRepository.findById(project_id);
-        if (project.isPresent()) {
-            ProjectRole projectRole = projectRoleRepository.findByProjectAndRole(project.get(), role);
+        if (securityService.userIsAnAdmin(project)) {
+            ProjectRole projectRole = getProjectRole(project, role);
             projectRole.setGlobal(teamRoleDTO.getIsGlobal());
             projectRole.updateUsers(
-                    teamRoleDTO.getTeam().stream().filter(RoleGrantDTO::getHasRole).map(tm -> {
-                        Optional<User> user = userRepository.findById(tm.getTeamMemberDTO().getId());
-                        return user.orElse(null);
+                    teamRoleDTO.getTeam().stream().filter(ProjectRoleGrant::getHasRole).map(tm -> {
+                        User user;
+                        try {
+                            user = userService.getUser(tm.getTeamMemberDTO().getId());
+                        } catch (ObjectNotFoundException e) {
+                            user = null;
+                        }
+                        return user;
                     }).collect(Collectors.toCollection(ArrayList::new))
             );
 
             projectRoleRepository.save(projectRole);
         }
-        else return "Project not found";
-        return null;
+        else throw new AccessForbiddenException();
     };
+
+    public ProjectRole getProjectRole(Project project, Role role) throws ObjectNotFoundException {
+        ProjectRole projectRole = projectRoleRepository.findByProjectAndRole(project, role);
+        if (projectRole == null) throw new ObjectNotFoundException("Project Role object was not found in the database");
+        else return projectRole;
+    }
+
 
 
 }

@@ -2,8 +2,9 @@ div.settings-page{
     margin-top: 15px !important;
 }
 
-div.general-settings {
+div.project-settings {
     overflow: auto;
+    min-height: 100px;
 }
 
 input.file-input {

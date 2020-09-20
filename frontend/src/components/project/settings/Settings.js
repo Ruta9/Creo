@@ -39,7 +39,7 @@ class Settings extends React.Component {
                         <SideMenu current={this.state.currentMenu} onChange={this.menuSelectionChanged}/>
                     </div>
                     <div className="twelve wide column">
-                        <div className="ui segment general-settings">
+                        <div className="ui segment project-settings">
                             {this.renderSpecificSettings()}
                         </div>
                     </div>
