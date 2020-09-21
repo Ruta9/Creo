@@ -12,8 +12,8 @@ public class ProjectDefaultImage {
 
     private String name;
 
-    public String getUrl(){
-        return "./projectimgs/" + this.name + ".png";
+    public String getName(){
+        return this.name + ".png";
     }
 
     public static List<ProjectDefaultImage> getDefaultImage(){

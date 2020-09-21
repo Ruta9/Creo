@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ProjectRepository extends CrudRepository<Project, Long> {
 
-    @Query(value = "SELECT p.id, p.name AS name, p.image_url AS imageUrl, " +
+    @Query(value = "SELECT p.id, p.name AS name, p.image_name AS imageUrl, " +
             "(SELECT count(tm.*) FROM TEAM tm WHERE tm.project_id = p.id) AS teamSize, " +
             "0 AS unreadNotifications, 0 AS activeStories, 0 AS activeTasks " +
             "FROM PROJECT p " +

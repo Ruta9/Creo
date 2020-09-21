@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import {useParams} from 'react-router-dom';
 import Axios from 'axios';
 
+import Loader from '../../common/Loader';
+
 import '../../../css/rolessettings.css';
 
 const RoleGrant = ({data, onSubmitCallback}) => {
@@ -139,6 +141,8 @@ const RolesSettings = () => {
             }
         });
     }
+
+    if (roles === null) return <Loader/>;
 
     return (
         <div>

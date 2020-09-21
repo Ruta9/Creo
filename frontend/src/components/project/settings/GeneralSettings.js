@@ -16,23 +16,19 @@ class GeneralSettings extends React.Component {
     }
 
     state = {
-        imagePreview: "https://semantic-ui.com/images/wireframe/image.png",
+        file: null,
+        imagePreview: null,
         project: null,
         owner: null,
         team: []
     }
 
-    componentDidMount = () => {
-        this.getTeamMembers();
-        this.getProjectInfo();
-    }
-
-    componentDidUpdate = () => {
-        if (this.state.owner === null && this.state.team !== [] && this.state.project !== null){
-            this.setState({
-                owner:  this.state.team.find(t => t.id === this.state.project.owner.id)
-            });
-        }
+    componentDidMount = async () => {
+        const team = await this.getTeamMembers();
+        const project =  await this.getProjectInfo();
+        this.setState({
+            owner:  team.find(t => t.id === project.owner.id)
+        });
     }
 
     getTeamMembers = async () => {
@@ -46,7 +42,9 @@ class GeneralSettings extends React.Component {
             this.setState({
                 team: teamResults.data
             });
+            return teamResults.data;
         }
+        return null;
     }
 
     getProjectInfo = async () => {
@@ -54,9 +52,11 @@ class GeneralSettings extends React.Component {
         if (projectInfo.status === 200){
             this.setState({
                 project: projectInfo.data,
-                imagePreview: window.location.origin + "/" + projectInfo.data.imageUrl
+                imagePreview: window.location.origin + `/uploads/project/image/${this.project_id}`
             });
+            return projectInfo.data;
         }
+        return null;
     }
 
     newFileSelected = (e) => {
@@ -66,7 +66,8 @@ class GeneralSettings extends React.Component {
 
             reader.onloadend = () => {
                 this.setState({
-                    imagePreview: reader.result
+                    imagePreview: reader.result,
+                    file: file
                 });
               }
             
@@ -75,7 +76,24 @@ class GeneralSettings extends React.Component {
     }
 
     onFormSubmit = (form) => {
-        console.log(form);
+        let project = {...this.state.project};
+        project.name = form.name;
+        project.description = form.description;
+
+        if (this.state.imagePreview === null) project.imageUrl = null;
+        let owner = {...this.state.owner};
+        delete owner.label;
+        delete owner.value;
+        project.owner = owner;
+
+        const projectForm = new FormData();
+        projectForm.append('file', this.state.file);
+        projectForm.append('form', new Blob ([JSON.stringify(project)], {type: "application/json"}));
+        Axios.put('/api/projects', projectForm, {
+            headers: {
+                "Content-Type": undefined
+            }
+        });
     }
 
     render() {
@@ -94,14 +112,30 @@ class GeneralSettings extends React.Component {
                     {/* <FormInput type="text" name="owner" data-tooltip="Note: changing the owner will revoke your admin rights but will leave you as a project's team member" data-position="bottom left" value:"Ruta Jankauskaite"/> */}
                     <br/><br/>
                     <label>Image:</label><br/>
-                    <button className="ui small basic black button"
+                    <button className="ui small basic black button" type="button"
                             onClick={() => this.fileInputRef.current.click()}>
                         <i className="paperclip large icon"/>
                         Upload image
                     </button>
                     <FormInput ref={this.fileInputRef} className="file-input" type="file" id="img" name="img" accept="image/*" changeCallback={this.newFileSelected}/>
-                    <label>Preview:</label>
-                    <img className="ui small image" alt="project" src={this.state.imagePreview}/>
+                    {this.state.imagePreview !== null ? 
+                    <React.Fragment>
+                        <label>Preview:</label>
+                        <img className="ui small image" alt="project" src={this.state.imagePreview}/>
+                        <button className="ui small basic button" type="button"
+                            onClick={() => this.setState({
+                                imagePreview: null,
+                                file: null
+                            })}>
+                                <i className="x icon"/>
+                                Remove image
+                        </button>
+                        <span 
+                        data-tooltip="If you save without an image, one of the default images will be generated for you!" 
+                        data-position="top left">
+                            <i className="question circle outline icon"/>
+                        </span>
+                    </React.Fragment> : null}
                     <button type="submit" className="right floated ui button custom-active-green">Save</button>
                 </Form>
             </div>

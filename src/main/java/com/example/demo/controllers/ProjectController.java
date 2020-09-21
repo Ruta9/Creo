@@ -2,17 +2,20 @@ package com.example.demo.controllers;
 
 import com.example.demo.DTOs.ProjectCreateForm;
 import com.example.demo.DTOs.ProjectGeneralInformation;
+import com.example.demo.DTOs.ProjectGeneralInformationForm;
 import com.example.demo.DTOs.UserProject;
 import com.example.demo.exceptions.AccessForbiddenException;
+import com.example.demo.exceptions.FileStorageException;
 import com.example.demo.exceptions.ObjectNotFoundException;
+import com.example.demo.exceptions.UnsupportedFileFormatException;
 import com.example.demo.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.AbstractMap;
 import java.util.List;
 
 @RestController
@@ -44,6 +47,15 @@ public class ProjectController {
             throws ObjectNotFoundException {
             projectService.createProject(projectCreateForm);
             return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PutMapping
+    public ResponseEntity updateProject(
+            @Valid @RequestPart("form") ProjectGeneralInformation projectGeneralInformation,
+            @RequestPart(value = "file", required = false) MultipartFile multipartFile)
+            throws UnsupportedFileFormatException, ObjectNotFoundException, FileStorageException {
+        projectService.updateProject(new ProjectGeneralInformationForm(projectGeneralInformation, multipartFile));
+        return ResponseEntity.ok().build();
     }
 
 }

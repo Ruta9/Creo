@@ -31,7 +31,7 @@ public class Project {
 
     private Date createdDate;
 
-    private String imageUrl;
+    private String imageName;
 
     @ManyToOne(optional = false)
     @JoinColumn(name="OWNER_ID", referencedColumnName="ID")
@@ -67,8 +67,8 @@ public class Project {
 
     @PreUpdate
     void setImage() {
-        if (this.imageUrl == null) {
-            this.imageUrl = ProjectDefaultImage.getRandomImage().getUrl();
+        if (this.imageName == null) {
+            this.imageName = ProjectDefaultImage.getRandomImage().getName();
         }
     }
 

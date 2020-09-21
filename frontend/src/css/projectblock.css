@@ -5,3 +5,10 @@ div.project-block div.column, div.notification-bell {
 div.project-block div.notification-bell i.bell {
     color: rgb(255, 17, 0);
 }
+
+div.project-block div.project-image {
+    min-height: 152px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

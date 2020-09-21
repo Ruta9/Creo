@@ -19,8 +19,8 @@ const ProjectBlock = ({project}) => {
                     </div>
                 </div>
 
-                <div className="center aligned content">
-                    <img alt="project" className="ui small image" src={project.imageUrl}/>
+                <div className="project-image">
+                    <img alt="project" className="ui small image " src={`/uploads/project/image/${project.id}`}/>
                 </div>
 
                 <div className="content">

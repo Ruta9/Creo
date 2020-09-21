@@ -16,7 +16,8 @@ public class ProjectGeneralInformation {
 
     private String description;
 
+    @NotNull
     private TeamMember owner;
 
-    private String imageUrl;
+    private String imageName;
 }

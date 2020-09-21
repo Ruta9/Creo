@@ -4,7 +4,7 @@ public interface UserProject {
 
     Long getId();
     String getName();
-    String getImageUrl();
+    String getImageName();
     int getTeamSize();
     int getUnreadNotifications();
     int getActiveStories();
