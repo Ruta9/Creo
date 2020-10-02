@@ -1,23 +1,16 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
 
+import {getCurrentUser} from '../actions';
 import '../css/header.css';
-import Axios from 'axios';
 
 const logo = require('../images/Creo_logo_100_300_white_crop.png');
 
 class Header extends React.Component {
 
-    state= {
-        currentUser: ''
-    }
-
     componentDidMount(){
-        Axios.get('/api/users/identity').then((response) => {
-            this.setState({
-                currentUser: response.data
-            });
-        });
+        this.props.getCurrentUser();
     }
 
     render() {
@@ -35,7 +28,7 @@ class Header extends React.Component {
 
             <div className="right menu">
                 <div className="small item">
-                    {this.state.currentUser}
+                    {this.props.currentUser !== null ? this.props.currentUser.firstname + ' ' + this.props.currentUser.lastname : ''}
                     <img alt="avatar" className="ui avatar image" src="https://www.pngitem.com/pimgs/m/105-1055689_user-account-person-avatar-operating-system-grey-user.png"></img>
                     {/* <i className="user black large icon"></i> */}
                 </div>
@@ -49,4 +42,10 @@ class Header extends React.Component {
 
 }
 
-export default Header;
+const mapStateToProps = (state) => {
+    return {
+        currentUser: state.identity 
+    }
+}
+  
+export default connect(mapStateToProps, {getCurrentUser})(Header);

@@ -21,7 +21,7 @@ import java.util.List;
 public class Project {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message="Project must have a name")
@@ -43,6 +43,7 @@ public class Project {
             joinColumns = @JoinColumn(name="PROJECT_ID", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(name="USER_ID", referencedColumnName = "ID")
     )
+    @OrderBy("lastname")
     private List<User> team;
 
     @EqualsAndHashCode.Exclude

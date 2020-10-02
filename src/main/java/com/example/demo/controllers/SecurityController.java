@@ -29,4 +29,10 @@ public class SecurityController {
     public ResponseEntity<Boolean> checkIfUserIsAnAdmin (@PathVariable Long id) throws ObjectNotFoundException {
         return ResponseEntity.ok(securityService.userIsAnAdmin(projectService.getProject(id)));
     }
+
+    @GetMapping("projects/storiesCreator/{id}")
+    public ResponseEntity<Boolean> checkIfUserCanCreateStories(@PathVariable Long id)
+            throws ObjectNotFoundException {
+        return ResponseEntity.ok(securityService.userCanCreateStories(projectService.getProject(id)));
+    }
 }

@@ -36,7 +36,7 @@ class GeneralSettings extends React.Component {
         if (teamResults.status === 200){
             teamResults.data.forEach(teamMember => {
                     teamMember.label = teamMember.firstname + ' ' + teamMember.lastname;
-                    teamMember.value = teamMember.email;
+                    teamMember.value = teamMember.id;
                 }
             );
             this.setState({
@@ -109,7 +109,6 @@ class GeneralSettings extends React.Component {
                     <FormInput rows="2" type="text" textarea="true" name="description" value={this.state.project !== null ? this.state.project.description : ''}/>
                     <label>Owner:</label><br/>
                     <LongDropdown options={this.state.team} selected={this.state.owner} onSelection={(option) => this.setState({owner: option})}/>
-                    {/* <FormInput type="text" name="owner" data-tooltip="Note: changing the owner will revoke your admin rights but will leave you as a project's team member" data-position="bottom left" value:"Ruta Jankauskaite"/> */}
                     <br/><br/>
                     <label>Image:</label><br/>
                     <button className="ui small basic black button" type="button"

@@ -1,0 +1,29 @@
+div.tickets-table {
+    margin-left: 20px !important;
+    margin-right: 20px !important;
+}
+
+div.tickets-table table, div.tickets-table table tr, div.tickets-table table td,
+div.tickets-table table th {
+    border-color:#7bd341 !important;
+}
+
+div.tickets-table table tbody tr:hover{
+    -webkit-box-shadow: 1px 1px 3px 0px rgba(143,143,143,0.75);
+    -moz-box-shadow: 1px 1px 3px 0px rgba(143,143,143,0.75);
+    box-shadow: 1px 1px 3px 0px rgba(143,143,143,0.75);
+    background-color: #51b93754;
+}
+
+div.tickets-table tbody{
+    color: rgb(59, 95, 56);
+}
+
+div.tickets-table tbody tr{
+    cursor: pointer;
+}
+
+div.tickets-table tbody tr td.link:hover{
+    text-decoration: underline !important;
+    color: black;
+}

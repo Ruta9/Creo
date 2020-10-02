@@ -1,0 +1,12 @@
+div.checkbox-list .item .content{
+    display:inline;
+}
+
+div.checkbox-list .item.select-all .content input{
+    margin-left: 10px;
+}
+
+div.checkbox-list {
+    max-height: 150px;
+    overflow-y: auto;
+}

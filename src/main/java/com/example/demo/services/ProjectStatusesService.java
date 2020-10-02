@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProjectStatusesService {
@@ -62,5 +63,11 @@ public class ProjectStatusesService {
                 projectService.saveProject(project);
         }
         else throw new AccessForbiddenException();
+    }
+
+    public Status getStatus(Long id) throws ObjectNotFoundException {
+        Optional<Status> status = statusRepository.findById(id);
+        if (status.isPresent()) return status.get();
+        else throw new ObjectNotFoundException("Status with id " + id + " not found");
     }
 }

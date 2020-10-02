@@ -1,0 +1,16 @@
+/* custom checkbox style (CheckboxList component, Roles settings) */
+.checkbox_input input {
+    opacity: 0;
+    width: 1em;
+    height: 1em;
+
+}
+
+.checkbox_control {
+  display: inline-grid;
+  width: 1.05em;
+  height: 1.05em;
+  border-radius: 0.25em;
+  border: 0.1em solid grey;
+  background-color: #51b937;
+}

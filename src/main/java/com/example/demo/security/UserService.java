@@ -1,5 +1,6 @@
 package com.example.demo.security;
 
+import com.example.demo.DTOs.TeamMember;
 import com.example.demo.data.User;
 import com.example.demo.exceptions.ObjectNotFoundException;
 import com.example.demo.repositories.UserRepository;
@@ -64,6 +65,11 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);
         if (user.isEmpty()) throw new ObjectNotFoundException("Something went wrong while trying to fetch currently logged in user");
         else return user.get();
+    }
+
+    public TeamMember getTeamMember() throws ObjectNotFoundException {
+        User user = getUser();
+        return new TeamMember(user.getId(), user.getFirstname(), user.getLastname(), user.getEmail());
     }
 
 

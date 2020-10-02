@@ -1,3 +1,5 @@
+
+/* Custom active button */
 button.custom-active-green {
     background-color: #4ba833 !important;
     color: white !important;  
@@ -7,7 +9,9 @@ button.custom-active-green:hover {
     background-color: #51b937 !important;
 }
 
+/* focused input green border */
 input:focus, textarea:focus{
     border-color: #4ba833 !important;
 }
+
 

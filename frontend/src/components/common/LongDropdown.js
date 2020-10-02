@@ -5,11 +5,12 @@ const LongDropdown = ({options, selected, onSelection}) => {
 
     const [isOpen, setIsOpen] = useState(false);
     const [searchValue, setSearchValue] = useState('');
-    const ref = useRef();
+    const dropdownRef = useRef();
+    const inputRef = useRef();
 
     useEffect( () => {
         const onBodyClick = (e) => {
-            if (ref.current.contains(e.target)) {
+            if (dropdownRef.current.contains(e.target)) {
                 return;
             };
             setIsOpen(false);
@@ -24,10 +25,14 @@ const LongDropdown = ({options, selected, onSelection}) => {
 
     }, []);
 
+    useEffect(()=>{
+        if (isOpen) inputRef.current.focus();
+        else inputRef.current.blur();
+    }, [isOpen])
+
     const renderedOptions = () => {
         if (options === null) return null;
-        const items = options.filter(option => option.label.toLowerCase().includes(searchValue) ||
-        option.value.toLowerCase().includes(searchValue)).map(option => {
+        const items = options.filter(option => option.label.toLowerCase().includes(searchValue)).map(option => {
             return (
             <div    className="item" 
                     key={option.value}
@@ -45,9 +50,9 @@ const LongDropdown = ({options, selected, onSelection}) => {
     }
 
     return (
-        <div key={selected} ref={ref} className={`ui search selection long dropdown ${isOpen ? 'visible active' : ''}`} onClick={() => setIsOpen(!isOpen)}>
+        <div key={selected} ref={dropdownRef} className={`ui search selection long dropdown ${isOpen ? 'visible active' : ''}`} onClick={() => setIsOpen(!isOpen)}>
             <i className="dropdown icon"></i>
-            <input className="search" autoComplete="off" tabIndex="0" value={searchValue} onChange={searchValueChanged}/>
+            <input ref={inputRef} className="search" autoComplete="off" tabIndex="0" value={searchValue} onChange={searchValueChanged}/>
             <div className="text">{(selected !== undefined && selected !== null && !isOpen) ? selected.label : ''}</div>
             <div className={`menu ${isOpen ? 'visible transition' : ''}`}>
                 {renderedOptions()}

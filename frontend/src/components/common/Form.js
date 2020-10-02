@@ -20,7 +20,7 @@ export const FormInput = React.forwardRef((props, ref) => {
 
     const onChange = (e) => {
         setValue(e.target.value);
-        if (props.changeCallback) props.changeCallback(e);
+        if (props.changeCallback !== undefined) props.changeCallback(e);
     }
 
     const errorElement = (
@@ -33,10 +33,10 @@ export const FormInput = React.forwardRef((props, ref) => {
         return (
             <div className={`field ${getError(props.name) !== null ? 'error' : ''}`}>
                 <textarea 
-                ref={ref}
+                ref={ref || null}
                 onChange={onChange}
                 onBlur={() => onInputBlur(props.name)} {...props}
-                value={value} />
+                value={value || ''} />
                 {getError(props.name) !== null ? errorElement : null}
             </div>
         );
@@ -45,10 +45,10 @@ export const FormInput = React.forwardRef((props, ref) => {
     return (
         <div className={`field ${getError(props.name) !== null ? 'error' : ''}`}>
             <input 
-            ref={ref}
+            ref={ref || null}
             onChange={onChange}
             onBlur={() => onInputBlur(props.name)} {...props}
-            value={value} />
+            value={value || ''} />
             {getError(props.name) !== null ? errorElement : null}
         </div>
     );
@@ -67,7 +67,7 @@ export class Form extends React.Component {
         const stateForm = {};
         const stateBlur = {};
         this.props.children.forEach(c => {
-            if (c.type.name === 'FormInput'){
+            if (c.type == FormInput){
                 const name = c.props.name;
                 stateForm[name] = '';
                 stateBlur[name] = false;
@@ -86,7 +86,8 @@ export class Form extends React.Component {
             blurred: {                
                 ...prevState.blurred,  
                 [name]: true  
-            }
+            },
+            errors: this.props.validate(this.state.form)
         }));
     }
 
@@ -113,9 +114,20 @@ export class Form extends React.Component {
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.validate(this.state.form);
-        if (Object.keys(this.state.errors).length === 0) {
+        let errors = this.props.validate(this.state.form);
+        if (Object.keys(errors).length === 0){
             this.props.onSubmit(this.state.form);
-        }        
+        }
+        else {
+            let blurred = {...this.state.blurred};
+            for (let key in blurred) {      
+                blurred[key] = true;
+            }
+            this.setState({
+            errors: errors,
+            blurred: blurred
+            });   
+        }   
     };
 
     render () {

@@ -44,6 +44,12 @@ public class SecurityService {
 
     }
 
+    public boolean userCanCreateStories(Project project){
+        ProjectRole pr = getProjectRole(project, Role.STORYCREATOR);
+        if (pr == null) return false;
+        return pr.getUsers().stream().anyMatch(u -> u.getId().equals(getUser().getId()));
+    }
+
     private User getUser(){
         return userRepository.findByEmail(userContext.getEmail());
     }

@@ -1,0 +1,24 @@
+div.tickets-filter button.ui.custom-active-green{
+    margin-left: 30px !important;
+}
+
+div.tickets-filter {
+    border-right: 1px solid rgb(177, 177, 177) !important;
+    background-color: rgb(238, 238, 238) !important;
+    padding-left: 50px;
+    max-height: 670px;
+    overflow-y: auto;
+    -webkit-box-shadow: -1px -1px 3px 1px rgba(238,238,238,1) !important;
+    -moz-box-shadow: -1px -1px 3px 1px rgba(238,238,238,1) !important;
+    box-shadow: -1px -1px 3px 1px rgba(238,238,238,1) !important;
+}
+
+div.tickets-filter span i.icon.arrow.long.alternate{
+    display: inline;
+    margin: 0;
+}
+
+div.tickets-filter span i.icon.arrow.long.alternate.up{
+    margin-right: 7px;
+}
+

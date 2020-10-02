@@ -1,0 +1,8 @@
+div.tickets-pagination-menu .item.active{
+    background-color: #4ba833 !important;
+    color:  white !important;
+}
+
+div.tickets-pagination-menu.menu a.item{
+    color: rgb(28, 146, 201);
+}

@@ -3,6 +3,7 @@ import {useParams} from 'react-router-dom';
 import Axios from 'axios';
 
 import Loader from '../../common/Loader';
+import CustomCheckbox from '../../common/CustomCheckbox';
 
 import '../../../css/rolessettings.css';
 
@@ -52,10 +53,12 @@ const RoleGrant = ({data, onSubmitCallback}) => {
                     <div className="header">{teamMemberDTO.firstname + ' ' + teamMemberDTO.lastname}</div>
                 </div>
                 <div className="right floated large content">
-                    <input type="checkbox" name="hasRole" checked={hasRole} onChange={() => {
-                        setSpecificUserHasRoleProp(teamMemberDTO.id, !hasRole);
-                        setSelectAll(false);
-                    }}/>
+                    <CustomCheckbox isSelected={hasRole}>
+                        <input type="checkbox" name="hasRole" checked={hasRole} onChange={() => {
+                            setSpecificUserHasRoleProp(teamMemberDTO.id, !hasRole);
+                            setSelectAll(false);
+                        }}/>
+                    </CustomCheckbox>
                 </div>
             </div>);
         });
@@ -65,10 +68,12 @@ const RoleGrant = ({data, onSubmitCallback}) => {
                 <div className="item select-all">
                 <div className="right floated middle aligned content">
                     All
-                    <input type="checkbox" name="all" checked={selectAll} onChange={() => {
-                        setAllRoleDataHasRoleProp(!selectAll);
-                        setSelectAll(!selectAll);
-                    }}/>
+                    <CustomCheckbox isSelected={selectAll}>
+                        <input type="checkbox" name="all" checked={selectAll} onChange={() => {
+                            setAllRoleDataHasRoleProp(!selectAll);
+                            setSelectAll(!selectAll);
+                        }}/>
+                    </CustomCheckbox>
                 </div>
                 </div>
                 {items}

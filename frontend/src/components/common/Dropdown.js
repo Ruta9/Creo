@@ -33,7 +33,7 @@ const Dropdown = ({options, selected, onSelection}) => {
     return (
         <div ref={ref} className={`ui selection dropdown ${isOpen ? 'visible active' : ''}`} onClick={() => setIsOpen(!isOpen)}>
             <i className="dropdown icon"></i>
-            <div className="text">{selected.label}</div>
+            <div className="text">{selected !== null ? selected.label : ''}</div>
             <div className={`menu ${isOpen ? 'visible transition' : ''}`}>
                 {renderedOptions}
             </div>

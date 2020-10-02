@@ -1,5 +1,6 @@
 package com.example.demo.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -7,16 +8,15 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Date;
-import java.util.UUID;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
+@NoArgsConstructor(force = true)
 @Data
 @RequiredArgsConstructor
 public class Story {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private final Long id;
 
     @NotBlank
@@ -24,20 +24,25 @@ public class Story {
 
     private String description;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-    @OneToOne(optional=false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedDate;
+
+    @ManyToOne(optional=false)
     @JoinColumn(name="CREATOR_ID", referencedColumnName = "ID")
     private User creator;
 
-    @OneToOne(optional=false)
+    @ManyToOne(optional=false)
     @JoinColumn(name="ASSIGNEE_ID", referencedColumnName = "ID")
     private User assignee;
 
-    @OneToOne(optional=false)
+    @ManyToOne(optional=false)
     @JoinColumn(name="STATUS_ID", referencedColumnName = "ID")
     private Status status;
 
+    @JsonIgnore
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @ManyToOne
@@ -48,7 +53,13 @@ public class Story {
     private Collection<Task> tasks;
 
     @PrePersist
-    void createdDate(){
+    void setDates(){
         this.createdDate = new Date();
+        this.updatedDate = new Date();
+    }
+
+    @PreUpdate
+    void updateDates() {
+        this.updatedDate = new Date();
     }
 }

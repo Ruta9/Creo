@@ -4,6 +4,7 @@ import Axios from 'axios';
 
 import ProjectMenu from './ProjectMenu';
 import Settings from './settings/Settings';
+import Tickets from './tickets/Tickets';
 
 const ProjectPage = () => {
 
@@ -37,7 +38,7 @@ const ProjectPage = () => {
                     <div>Kanban</div>
                 </Route>
                 <Route exact path={`${path}/tickets`}>
-                    <div>Tickets</div>
+                    <Tickets/>
                 </Route>
                 <Route>
                     <Redirect to={`${url}/kanban`} />

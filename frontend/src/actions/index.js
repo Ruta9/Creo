@@ -26,3 +26,18 @@ export const checkIfAuthenticated = () => {
         });
     };
 };
+
+export const getCurrentUser = () => {
+    return async (dispatch) => {
+        const response = await Axios.get('/api/users/identity');
+        let value = null;
+        if (response.status === 200) {
+            value = response.data;
+        }
+
+        dispatch({
+            type: 'SET_IDENTITY',
+            payload: value
+        });
+    }; 
+}

@@ -216,7 +216,7 @@ const StatusSettings = () => {
                             <i className="ui icon exclamation mark large"/>
                         </div>
                         <div className="fifteen wide column">
-                            The order of statuses you provide will be the order they will be presented in the kanban. The last status in the order should indicate that the ticket is archived - it will not be visible in the kanban or added to the tickets number on the projects list page. Maximum number of statuses is 8, minimum - 2.
+                            Drag and drop to change the order. The order of statuses you provide will be the order they will be presented in the kanban. The last status in the order should indicate that the ticket is archived - it will not be visible in the kanban or added to the tickets number on the projects list page. Maximum number of statuses is 8, minimum - 2.
                         </div>
                     </div>
                 </div>

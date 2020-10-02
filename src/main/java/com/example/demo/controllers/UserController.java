@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.DTOs.TeamMember;
 import com.example.demo.data.User;
 import com.example.demo.exceptions.ObjectNotFoundException;
 import com.example.demo.security.RegistrationForm;
@@ -24,9 +25,8 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/identity")
-    public String getFullName() throws ObjectNotFoundException {
-        User user = userService.getUser();
-        return user.getFirstname() + " " + user.getLastname();
+    public ResponseEntity<TeamMember> getIdentity() throws ObjectNotFoundException {
+        return ResponseEntity.ok(userService.getTeamMember());
     }
 
     @GetMapping("/isAuthenticated")
