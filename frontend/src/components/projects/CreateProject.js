@@ -33,8 +33,8 @@ class CreateProject extends React.Component {
     render() {
 
         return (
-            <div className="create-project">
-                <Modal header="Create new project" size="mini">
+            <div className="create-project" style={{minWidth: "300px"}}>
+                <Modal header="Create new project" size="mini" style={{minWidth: "300px"}}>
                     <div className="ui container">
                         {this.state.showErrorMessage ? (
                             <div className="ui tiny error message">{this.state.errorMessage}</div>

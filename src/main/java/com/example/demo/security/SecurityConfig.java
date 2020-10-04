@@ -32,6 +32,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SecuritySuccessHandler securitySuccessHandler;
 
+    @Autowired
+    private CustomLogoutSuccessHandler customLogoutSuccessHandler;
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -52,7 +56,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login()
                 .successHandler(securitySuccessHandler)
-                .loginPage("/login")
+                .and()
+                .logout()
+                .logoutUrl("/api/auth/logout")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID", "JWT")
+                .logoutSuccessHandler(customLogoutSuccessHandler)
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint());
 

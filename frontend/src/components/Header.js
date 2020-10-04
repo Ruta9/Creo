@@ -1,8 +1,9 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
+import Axios from 'axios';
 
-import {getCurrentUser} from '../actions';
+import {getCurrentUser, checkIfAuthenticated} from '../actions';
 import '../css/header.css';
 
 const logo = require('../images/Creo_logo_100_300_white_crop.png');
@@ -11,6 +12,12 @@ class Header extends React.Component {
 
     componentDidMount(){
         this.props.getCurrentUser();
+    }
+
+    logout = async () => {
+        const results = await Axios.post("/api/auth/logout");
+        if (results.status === 200)
+        this.props.checkIfAuthenticated();
     }
 
     render() {
@@ -32,9 +39,9 @@ class Header extends React.Component {
                     <img alt="avatar" className="ui avatar image" src="https://www.pngitem.com/pimgs/m/105-1055689_user-account-person-avatar-operating-system-grey-user.png"></img>
                     {/* <i className="user black large icon"></i> */}
                 </div>
-                <Link className="green-item item">
+                <div className="link green-item item" onClick={this.logout}>
                     Logout
-                </Link>
+                </div>
             </div>
         </div>
         );
@@ -44,8 +51,8 @@ class Header extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        currentUser: state.identity 
+        currentUser: state.identity
     }
 }
   
-export default connect(mapStateToProps, {getCurrentUser})(Header);
+export default connect(mapStateToProps, {getCurrentUser, checkIfAuthenticated})(Header);
