@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
-import java.util.UUID;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
@@ -25,25 +24,37 @@ public class Task {
 
     private String description;
 
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-    @OneToOne(optional=false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedDate;
+
+    @ManyToOne(optional=false)
     @JoinColumn(name="CREATOR_ID", referencedColumnName = "ID")
     private User creator;
 
-    @OneToOne(optional=false)
+    @ManyToOne(optional=false)
     @JoinColumn(name="ASSIGNEE_ID", referencedColumnName = "ID")
     private User assignee;
 
-    @NotBlank
-    private String status;
+    @ManyToOne(optional=false)
+    @JoinColumn(name="STATUS_ID", referencedColumnName = "ID")
+    private Status status;
 
-    @ManyToOne
+    @ManyToOne(optional=false)
     @JoinColumn(name="STORY_ID", referencedColumnName = "ID")
     private Story story;
 
     @PrePersist
-    void createdDate(){
+    void setDates(){
         this.createdDate = new Date();
+        this.updatedDate = new Date();
+    }
+
+    @PreUpdate
+    void updateDates() {
+        this.updatedDate = new Date();
     }
 }

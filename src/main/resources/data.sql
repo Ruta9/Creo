@@ -337,8 +337,8 @@ INSERT INTO STORY (id, name, description, project_id, assignee_id, creator_id, s
 (5, 'Login functionality',
 'Frontend and Backend parts of login functionality for Creo application. More detailed info is attached. Due date: 2020-11-25.',
 10, 13, 16, 114, parsedatetime('2020-09-23 15:08:33', 'yyyy-MM-dd hh:mm:ss'), parsedatetime('2020-09-23 15:15:28', 'yyyy-MM-dd hh:mm:ss')),
-(6, 'Login functionality',
-'Frontend and Backend parts of login functionality for Creo application. More detailed info is attached. Due date: 2020-11-25.',
+(6, 'Example',
+'This is some example for the description field. There should be some global story decisions written here.',
 10, 14, 14, 115, parsedatetime('2020-09-23 15:08:33', 'yyyy-MM-dd hh:mm:ss'), parsedatetime('2020-09-23 15:15:28', 'yyyy-MM-dd hh:mm:ss')),
 (7, 'Login functionality',
 'Frontend and Backend parts of login functionality for Creo application. More detailed info is attached. Due date: 2020-11-25.',
@@ -376,6 +376,16 @@ INSERT INTO STORY (id, name, description, project_id, assignee_id, creator_id, s
 (18, 'Login functionality',
 'Frontend and Backend parts of login functionality for Creo application. More detailed info is attached. Due date: 2020-11-25.',
 10, 14, 16, 115, parsedatetime('2020-09-23 15:08:33', 'yyyy-MM-dd hh:mm:ss'), parsedatetime('2020-09-23 15:15:28', 'yyyy-MM-dd hh:mm:ss'));
+
+
+
+INSERT INTO TASK (id, name, description, story_id, assignee_id, creator_id, status_id, created_date, updated_date) VALUES
+(1, 'Spring Security configuration', 'Configure Spring Security', 1, 1, 1, 117, parsedatetime('2020-10-01 15:15:28', 'yyyy-MM-dd hh:mm:ss'), parsedatetime('2020-10-02 01:04:28', 'yyyy-MM-dd hh:mm:ss')),
+(2, 'Front-end login form HTML+CSS', 'Create login form view', 1, 1, 1, 117, parsedatetime('2020-10-01 15:15:28', 'yyyy-MM-dd hh:mm:ss'), parsedatetime('2020-10-02 01:04:28', 'yyyy-MM-dd hh:mm:ss')),
+(3, 'Front-end login form React', 'Front-end validation and submit functionality', 1, 1, 1, 117, parsedatetime('2020-10-01 15:15:28', 'yyyy-MM-dd hh:mm:ss'), parsedatetime('2020-10-02 01:04:28', 'yyyy-MM-dd hh:mm:ss')),
+(4, 'Wire it all together', 'Make sure everything works', 1, 1, 1, 117, parsedatetime('2020-10-01 15:15:28', 'yyyy-MM-dd hh:mm:ss'), parsedatetime('2020-10-02 01:04:28', 'yyyy-MM-dd hh:mm:ss')),
+(5, 'Testing', 'test everything', 1, 1, 1, 117, parsedatetime('2020-10-01 15:15:28', 'yyyy-MM-dd hh:mm:ss'), parsedatetime('2020-10-02 01:04:28', 'yyyy-MM-dd hh:mm:ss'));
+
 
 
 

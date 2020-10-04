@@ -18,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StoryService {
@@ -110,7 +111,11 @@ public class StoryService {
             storyRepository.save(story);
         }
         else throw new AccessForbiddenException();
+    }
 
-
+    public Story getStory(Long id) throws ObjectNotFoundException {
+        Optional<Story> story = storyRepository.findById(id);
+        if (story.isPresent()) return story.get();
+        else throw new ObjectNotFoundException("Could not find a story with id " + id);
     }
 }

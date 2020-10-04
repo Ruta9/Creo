@@ -9,7 +9,7 @@ const TicketsTable = ({tickets}) => {
 
     useEffect(() => {
         setStories(tickets);
-    }, [tickets]);
+    });
 
     const renderTableRows = () => {
         return stories.map(story => {
