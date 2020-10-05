@@ -108,7 +108,8 @@ const StatusesConfiguration = (props) => {
                 errors.name = "Status with the same label is already present"
                 return errors;
             }
-        })
+        });
+        if (form.name === null || form.name === '' || form.name.trim === '') errors.name = "Namo cannot be blank";
         return errors;
     }
 

@@ -96,13 +96,19 @@ class GeneralSettings extends React.Component {
         });
     }
 
+    validate = (form) => {
+        let errors = {};
+        if (form.name === null || form.name === '' || form.name.trim === '') errors.name = "Name cannot be blank";
+        return errors;
+    }
+
     render() {
 
         if (this.state.project === null || this.state.team === [] || this.state.owner === null) return (<Loader/>);
 
         return (
             <div className="general-settings">
-                <Form validate={(form)=>{return {}}} onSubmit={this.onFormSubmit}>
+                <Form validate={(form)=>this.validate(form)} onSubmit={this.onFormSubmit}>
                     <label>Name:</label>
                     <FormInput type="text" name="name" value={this.state.project !== null ? this.state.project.name : ''}/>
                     <label>Description:</label>
