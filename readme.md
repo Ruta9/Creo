@@ -28,23 +28,23 @@ A simple project management tool. A mix between Trello, Jira and ServiceNow.
 
 ##### Login page
 
-![Login page](specification/screenshots/FrontPage_Login.png | width=600)
+![Login page](specification/screenshots/FrontPage_Login.png?raw=true | width=600)
 
 ##### User Projects' list
 
-![User Projects](specification/screenshots/UserProjects.png | width=600)
+![User Projects](specification/screenshots/UserProjects.png?raw=true | width=600)
 
 ##### Project General Settings
 
-![Project General Settings](specification/screenshots/ProjectSettings_General.png | width=600)
+![Project General Settings](specification/screenshots/ProjectSettings_General.png?raw=true | width=600)
 
 ##### Project Tickets' list
 
-![Project Tickets list](specification/screenshots/Tickets_Expanded.png | width=600)
+![Project Tickets list](specification/screenshots/Tickets_Expanded.png?raw=true | width=600)
 
 ##### Project Tickets' list filtering
 
-![Project Tickets list](specification/screenshots/Tickets_Filtering.png | width=600)
+![Project Tickets list](specification/screenshots/Tickets_Filtering.png?raw=true | width=600)
 
 ##### More screenshots:
 
