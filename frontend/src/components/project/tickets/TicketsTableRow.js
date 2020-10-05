@@ -39,7 +39,7 @@ const TicketsTableRow = ({story}) => {
 
     return (
         <React.Fragment>
-            <tr onClick={() => setIsExpanded(!isExpanded)}> 
+            <tr className={`${isExpanded ? "expanded" : ""}`} onClick={() => setIsExpanded(!isExpanded)}> 
                 <td className="center aligned"><i className={`ui icon caret ${isExpanded ? "right" : "down"}`}/></td>
                 <td className="link">{story.name}</td>
                 <td>{story.shortenedDescription}</td>

@@ -23,6 +23,10 @@ div.tickets-table tbody tr{
     cursor: pointer;
 }
 
+div.tickets-table table tbody tr.expanded {
+    background-color: #e4f0df;
+}
+
 div.tickets-table tbody tr td.link:hover{
     text-decoration: underline !important;
     color: black;

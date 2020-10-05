@@ -9,7 +9,9 @@ import java.util.List;
 
 public interface TaskRepository extends PagingAndSortingRepository<Task, Long> {
 
-    @Query(value = "SELECT s.id, s.name, (SUBSTRING(s.description, 0, 80) || '...') as shortenedDescription, " +
+    @Query(value = "SELECT s.id, s.name, " +
+            "CASE WHEN LENGTH(s.description) < 78 THEN s.description " +
+            "ELSE (SUBSTRING(s.description, 0, 77) || '...') END as shortenedDescription, " +
             "CONCAT(user_assignee.firstname, ' ', user_assignee.lastname) as assignee, " +
             "CONCAT(user_creator.firstname, ' ', user_creator.lastname) as creator, " +
             "st.name as status, " +
