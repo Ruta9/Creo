@@ -51,6 +51,10 @@ A simple project management tool. A mix between Trello, Jira and ServiceNow.
 
 [Here](specification/screenshots)
 
+##### Credits:
+
+[Here](usedGraphicsCredits.txt)
+
 
 
 

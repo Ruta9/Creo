@@ -21,7 +21,9 @@ class RegisterForm extends React.Component {
                 }
             }
         );
-        if (response && response.status === 201) this.setState({registrationSuccessful: true});
+        if (response !== null && response !== undefined && response.status === 201) {
+            this.setState({registrationSuccessful: true});
+        }
     };
 
     successModal = () => {

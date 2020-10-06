@@ -38,6 +38,6 @@ public class UserController {
     public ResponseEntity register(@Valid @RequestBody RegistrationForm registrationForm)
             throws UserAlreadyExistsException {
         userService.register(registrationForm);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(201).build();
     }
 }
