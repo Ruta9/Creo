@@ -17,6 +17,7 @@ Things to still try out:
 - Unit testing
 - Integration testing
 - Web Sockets + sockJs
+- Front-end unit tests
     
 #### About _Creo_:
 A simple project management tool. A mix between Trello, Jira and ServiceNow.
